@@ -1,30 +1,45 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <div id="view">
+    <router-view />
   </div>
-  <router-view />
+  <Navbar />
 </template>
 
+<script>
+import Navbar from "@/components/Navbar.vue";
+
+export default {
+  components: { Navbar },
+  mounted() {
+    this.$store.dispatch("checkAuth");
+  },
+};
+</script>
+
 <style>
-#app {
+* {
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-sizing: border-box;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+}
+
+#view {
+  flex-grow: 1;
+}
+
+.error {
+  background-color: red;
   text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+  font-size: 1.5rem;
+  padding: 10px;
 }
 </style>
