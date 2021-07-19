@@ -11,12 +11,14 @@ import { shoppyFirestore } from "@/firebase/config";
 
 export default {
   name: "AddItem",
+  props: ["index"],
   data() {
     return {
       item: {
         name: "",
         value: "",
         done: false,
+        list_id: this.index,
       },
     };
   },
@@ -35,6 +37,11 @@ export default {
     },
     close() {
       this.$emit("close");
+    },
+  },
+  watch: {
+    index(id) {
+      this.item.list_id = id;
     },
   },
 };

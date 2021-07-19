@@ -47,7 +47,7 @@ export default {
 .shopping-item > div {
   display: flex;
   flex-grow: 1;
-  cursor: move;
+  cursor: pointer;
 }
 
 .shopping-item > div.done {

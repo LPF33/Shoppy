@@ -1,19 +1,15 @@
 <template>
   <div class="shoppy-section" @click.self="setVisible">
     <h1>Shoppy</h1>
-    <section v-if="sortedList">
-      <ShoppingItem
-        v-for="it in sortedList"
-        :key="it.key"
-        :item="it"
-        draggable="true"
-        @dragstart="startDrag($event, it)"
-        @drop="onDrop($event, it)"
-        @dragover.prevent
-        @dragenter.prevent
-      />
-    </section>
-    <AddItem v-if="visible" @close="setVisible" />
+    <main class="section-draggable">
+      <VueDraggableNext v-model="items" @change="onDrop" class="draggable-next">
+        <span v-for="it in items" :key="it.key">🖐</span>
+      </VueDraggableNext>
+      <div>
+        <ShoppingItem v-for="it in items" :key="it.key" :item="it" />
+      </div>
+    </main>
+    <AddItem v-if="visible" @close="setVisible" :index="index" />
     <button v-else @click="setVisible">➕</button>
   </div>
 </template>
@@ -22,52 +18,58 @@
 import AddItem from "@/components/AddItem";
 import ShoppingItem from "@/components/ShoppingItem";
 import { shoppyFirestore } from "@/firebase/config";
+import { VueDraggableNext } from "vue-draggable-next";
 
 export default {
   name: "Shoppy",
   components: {
     AddItem,
     ShoppingItem,
+    VueDraggableNext,
   },
   data() {
     return {
       items: null,
       visible: false,
       unsubscribe: null,
+      index: 0,
     };
   },
   methods: {
     setVisible() {
       this.visible = !this.visible;
     },
-    startDrag(e, item) {
-      e.dataTransfer.dropEffect = "move";
-      e.dataTransfer.effectAllowed = "move";
-      e.dataTransfer.setData("itemId", item.list_id);
-    },
-    onDrop(e, item) {
-      const newId = item.list_id;
-      const oldId = parseInt(e.dataTransfer.getData("itemId"));
-      if (newId === oldId) {
+    onDrop(e) {
+      const { oldIndex, newIndex, element: draggedItem } = e.moved;
+      const itemsList = [...this.items];
+      let newDraggedIndex;
+      if (newIndex === oldIndex) {
         return;
       }
-      const itemsList = [...this.items];
-      const draggedItem = itemsList.find((item) => item.list_id === oldId);
-      if (newId < oldId) {
+      if (newIndex < oldIndex) {
+        newDraggedIndex = itemsList[newIndex + 1].list_id;
         itemsList.forEach((item) => {
-          if (item.list_id >= newId && item.list_id < oldId) {
+          if (
+            item.list_id >= newDraggedIndex &&
+            item.list_id !== draggedItem.list_id
+          ) {
             item.list_id++;
             this.updateFirebase(item);
           }
         });
       } else {
+        newDraggedIndex = itemsList[newIndex - 1].list_id;
         itemsList.forEach((item) => {
-          if (item.list_id > oldId && item.list_id <= newId) {
+          if (
+            item.list_id <= newDraggedIndex &&
+            item.list_id !== draggedItem.list_id
+          ) {
             item.list_id--;
+            this.updateFirebase(item);
           }
         });
       }
-      draggedItem.list_id = newId;
+      draggedItem.list_id = newDraggedIndex;
       this.updateFirebase(draggedItem);
     },
     async updateFirebase(item) {
@@ -77,20 +79,15 @@ export default {
         .update({ list_id: item.list_id });
     },
   },
-  computed: {
-    sortedList() {
-      if (!this.items || !this.items.length) {
-        return null;
-      }
-      return [...this.items].sort((a, b) => a.list_id - b.list_id);
-    },
-  },
   async created() {
     try {
       this.unsubscribe = shoppyFirestore.collection("shoppy").onSnapshot(
         (doc) => {
-          let newDoc = doc.docs.map((item) => item.data());
+          let newDoc = doc.docs
+            .map((item) => item.data())
+            .sort((a, b) => a.list_id - b.list_id);
           this.items = newDoc;
+          this.index = newDoc[newDoc.length - 1].list_id + 1;
         },
         (err) => console.log(err)
       );
@@ -126,13 +123,31 @@ h1 {
   height: 1.5em;
 }
 
-section {
+.section-draggable {
   position: absolute;
   top: calc(2rem + 20px);
   bottom: 8rem;
   max-width: 500px;
-  width: 80vw;
+  width: 90vw;
   overflow-y: auto;
+  display: flex;
+}
+
+.section-draggable > div:nth-child(2) {
+  flex-grow: 1;
+}
+
+.draggable-next {
+  display: flex;
+  flex-direction: column;
+  margin-right: 5px;
+}
+
+.draggable-next span {
+  font-size: 2rem;
+  border-bottom: 1px solid transparent;
+  line-height: 1.5em;
+  cursor: move;
 }
 
 button {
@@ -148,9 +163,5 @@ button {
   cursor: pointer;
   margin-top: 2rem;
   user-select: none;
-}
-
-.drag-over {
-  border-bottom: 5px solid #39a9cb;
 }
 </style>
