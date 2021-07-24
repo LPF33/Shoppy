@@ -1,16 +1,57 @@
 <template>
   <div class="shoppy-section" @click.self="setVisible">
     <h1>Shoppy</h1>
-    <main class="section-draggable">
-      <VueDraggableNext v-model="items" @change="onDrop" class="draggable-next">
-        <span v-for="it in items" :key="it.key">🖐</span>
-      </VueDraggableNext>
-      <div>
-        <ShoppingItem v-for="it in items" :key="it.key" :item="it" />
-      </div>
+    <main>
+      <section class="section-draggable" v-if="category === 'Supermarkt'">
+        <VueDraggableNext
+          v-model="supermarktItems"
+          @change="onDrop"
+          class="draggable-next"
+        >
+          <span v-for="it in supermarktItems" :key="it.key">🖐</span>
+        </VueDraggableNext>
+        <div>
+          <ShoppingItem
+            v-for="it in supermarktItems"
+            :key="it.key"
+            :item="it"
+          />
+        </div>
+      </section>
+      <section class="section-draggable" v-if="category === 'Drogerie'">
+        <VueDraggableNext
+          v-model="drogerieItems"
+          @change="onDrop"
+          class="draggable-next"
+        >
+          <span v-for="it in drogerieItems" :key="it.key">🖐</span>
+        </VueDraggableNext>
+        <div>
+          <ShoppingItem v-for="it in drogerieItems" :key="it.key" :item="it" />
+        </div>
+      </section>
     </main>
-    <AddItem v-if="visible" @close="setVisible" :index="index" />
-    <button v-else @click="setVisible">➕</button>
+    <AddItem
+      v-if="visible"
+      @close="setVisible"
+      :index="index"
+      :selected="category"
+    />
+    <div class="buttons" v-else>
+      <button
+        @click="switchCategory('Supermarkt')"
+        :class="{ active: category === 'Supermarkt' }"
+      >
+        🧀
+      </button>
+      <button @click="setVisible">➕</button>
+      <button
+        @click="switchCategory('Drogerie')"
+        :class="{ active: category === 'Drogerie' }"
+      >
+        🧴
+      </button>
+    </div>
   </div>
 </template>
 
@@ -29,7 +70,9 @@ export default {
   },
   data() {
     return {
-      items: null,
+      supermarktItems: null,
+      drogerieItems: null,
+      category: "Supermarkt",
       visible: false,
       unsubscribe: null,
       index: 0,
@@ -39,9 +82,16 @@ export default {
     setVisible() {
       this.visible = !this.visible;
     },
+    switchCategory(category) {
+      this.category = category;
+    },
     onDrop(e) {
       const { oldIndex, newIndex, element: draggedItem } = e.moved;
-      const itemsList = [...this.items];
+      const itemsList =
+        draggedItem.category === "Supermarkt"
+          ? [...this.supermarktItems]
+          : [...this.drogerieItems];
+      console.log(itemsList);
       let newDraggedIndex;
       if (newIndex === oldIndex) {
         return;
@@ -86,7 +136,12 @@ export default {
           let newDoc = doc.docs
             .map((item) => item.data())
             .sort((a, b) => a.list_id - b.list_id);
-          this.items = newDoc;
+          this.supermarktItems = newDoc.filter(
+            (item) => item.category === "Supermarkt"
+          );
+          this.drogerieItems = newDoc.filter(
+            (item) => item.category === "Drogerie"
+          );
           this.index = newDoc[newDoc.length - 1].list_id + 1;
         },
         (err) => console.log(err)
@@ -123,13 +178,16 @@ h1 {
   height: 1.5em;
 }
 
-.section-draggable {
+main {
   position: absolute;
   top: calc(2rem + 20px);
   bottom: 8rem;
   max-width: 500px;
   width: 90vw;
   overflow-y: auto;
+}
+
+.section-draggable {
   display: flex;
 }
 
@@ -150,18 +208,29 @@ h1 {
   cursor: move;
 }
 
-button {
+.buttons {
   position: absolute;
   bottom: 10px;
-  font-size: 3rem;
+  margin-top: 2rem;
+  display: flex;
+  justify-content: space-evenly;
+  max-width: 500px;
+  width: 100vw;
+}
+
+button {
   height: 6rem;
   width: 6rem;
+  font-size: 3rem;
   border: 1px solid grey;
   border-radius: 50%;
   line-height: 1.5;
   padding: 10px;
   cursor: pointer;
-  margin-top: 2rem;
   user-select: none;
+}
+
+button.active {
+  background-color: #ffeda3;
 }
 </style>

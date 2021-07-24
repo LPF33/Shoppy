@@ -2,6 +2,10 @@
   <form @submit.prevent="addNewItem" @click.self="close">
     <input type="text" placeholder="Add item" v-model="item.name" />
     <input type="text" placeholder="How much?" v-model="item.value" />
+    <select v-model="item.category">
+      <option value="Supermarkt">Supermarkt</option>
+      <option value="Drogerie">Drogerie</option>
+    </select>
     <button>🛒</button>
   </form>
 </template>
@@ -11,12 +15,13 @@ import { shoppyFirestore } from "@/firebase/config";
 
 export default {
   name: "AddItem",
-  props: ["index"],
+  props: ["index", "selected"],
   data() {
     return {
       item: {
         name: "",
         value: "",
+        category: this.selected,
         done: false,
         list_id: this.index,
       },
@@ -59,11 +64,12 @@ form {
   flex-direction: column;
   border-radius: 10px;
   margin: 5px;
-  height: 50vh;
+  height: 60vh;
   background-color: #2940d3;
 }
 
-input {
+input,
+select {
   font-size: 1.5rem;
   margin: 10px 0;
   padding: 5px;
@@ -71,6 +77,10 @@ input {
   height: 45px;
   text-align: center;
   background-color: #ffeda3;
+}
+
+select {
+  font-size: 1rem;
 }
 
 button {
@@ -82,7 +92,7 @@ button {
   line-height: 1.5;
   padding: 10px;
   cursor: pointer;
-  margin-top: 2rem;
+  margin-top: 0.5rem;
   user-select: none;
 }
 </style>
