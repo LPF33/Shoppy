@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Main from "../views/Main.vue";
 import Shoppy from "../views/Shoppy.vue";
 import Jambo from "../views/Jambo.vue";
+import Cook from "../views/Cook.vue";
 import store from "@/store";
 
 const routes = [
@@ -34,6 +35,12 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import("../views/Budget.vue"),
+  },
+  {
+    path: "/cook",
+    name: "Cook",
+    meta: { requiresAuth: true },
+    component: Cook,
   },
   {
     path: "/login",

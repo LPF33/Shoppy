@@ -1,16 +1,25 @@
 <template>
-  <div class="main-section">
+  <main>
+    <img :src="`${publicPath}img/wedding.JPG`" />
     <div v-if="schaetzchen" v-html="greeting" class="header"></div>
     <div v-else class="emoji">🦋</div>
-    <aside>{{ wedding }} Tage bis zur Hochzeit 👰</aside>
-    <router-link :to="{ name: 'Budget' }" id="budget-route">💰</router-link>
-    <button @click="userLogout" id="logout-button">🔒</button>
-  </div>
+    <aside>{{ wedding }} Tage bis zur Hochzeit</aside>
+    <footer>
+      <router-link :to="{ name: 'Budget' }" class="buttons">💰</router-link>
+      <router-link :to="{ name: 'Jambo' }" class="buttons">🎲</router-link>
+      <button @click="userLogout" class="buttons">🔒</button>
+    </footer>
+  </main>
 </template>
 
 <script>
 export default {
   name: "Main",
+  data() {
+    return {
+      publicPath: process.env.BASE_URL,
+    };
+  },
   methods: {
     userLogout() {
       this.$store.commit("logout");
@@ -49,9 +58,9 @@ export default {
 </script>
 
 <style scoped>
-.main-section {
+main {
   position: relative;
-  background-color: #39a9cb;
+  background-color: #ffffff;
   height: 100%;
   color: #232323;
   font-weight: bold;
@@ -59,6 +68,17 @@ export default {
   flex-direction: column;
   align-items: center;
   text-align: center;
+  z-index: 1;
+}
+
+img {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: 100vw;
+  max-height: 100%;
+  object-fit: contain;
+  z-index: -1;
 }
 
 .header {
@@ -69,15 +89,22 @@ aside {
   font-size: 1.5rem;
   padding: 20px;
   margin: auto 0;
-  background-color: #ffeda3;
+  background-color: rgba(0, 0, 0, 0.507);
   border-radius: 10px;
+  color: rgb(255, 255, 255);
 }
 
-#logout-button {
-  background-color: transparent;
+footer {
   position: absolute;
   bottom: 10px;
-  right: 10px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 10px;
+}
+
+.buttons {
+  background-color: transparent;
   font-size: 3rem;
   height: 6rem;
   width: 6rem;
@@ -88,24 +115,7 @@ aside {
   cursor: pointer;
   user-select: none;
   box-shadow: 0 0 8px black;
-}
-
-#budget-route {
-  background-color: transparent;
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
   text-decoration: none;
-  font-size: 3rem;
-  height: 6rem;
-  width: 6rem;
-  border: 1px solid grey;
-  border-radius: 50%;
-  line-height: 1.5;
-  padding: 10px;
-  cursor: pointer;
-  user-select: none;
-  box-shadow: 0 0 8px black;
 }
 
 .emoji {
