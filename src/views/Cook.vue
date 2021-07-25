@@ -1,6 +1,7 @@
 <template>
   <main>
-    <h1>👩‍🍳 Wann kochen wir was? 👨‍🍳</h1>
+    <h1>👩‍🍳 👨‍🍳</h1>
+    <h1>Wann kochen wir was?</h1>
     <CookCalendar />
   </main>
 </template>
@@ -24,5 +25,9 @@ main {
   height: 100%;
   color: #232323;
   text-align: center;
+}
+
+h1 {
+  margin-bottom: 10px;
 }
 </style>

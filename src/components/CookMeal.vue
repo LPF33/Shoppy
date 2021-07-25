@@ -36,6 +36,9 @@ export default {
     date: {
       deep: true,
       handler(dataObject) {
+        this.meal = "";
+        this.existingKey = false;
+
         this.startDate = this.dateFormat(
           this.today.getFullYear(),
           this.today.getMonth(),
@@ -72,7 +75,6 @@ export default {
       );
     },
     closeModal() {
-      this.meal = "";
       this.$emit("close");
     },
     async addNewMeal() {
