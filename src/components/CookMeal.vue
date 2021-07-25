@@ -10,6 +10,9 @@
       <input type="date" v-model="startDate" />
       <input type="date" v-model="endDate" />
       <button @click="addNewMeal">➕</button>
+      <button id="delete-meal" v-if="existingKey" @click="deleteMeal">
+        ❌
+      </button>
     </section>
   </main>
 </template>
@@ -26,19 +29,30 @@ export default {
       startDate: null,
       endDate: null,
       meal: "",
+      existingKey: false,
     };
   },
   watch: {
-    date(date) {
-      this.startDate = this.dateFormat(
-        this.today.getFullYear(),
-        this.today.getMonth(),
-        date
-      );
-      this.autoNextDay();
-    },
-    startDate() {
-      this.autoNextDay();
+    date: {
+      deep: true,
+      handler(dataObject) {
+        this.startDate = this.dateFormat(
+          this.today.getFullYear(),
+          this.today.getMonth(),
+          dataObject.startNum
+        );
+        if ("key" in dataObject) {
+          this.existingKey = dataObject.key;
+          this.meal = dataObject?.meal || "";
+          this.endDate = dataObject.endDate;
+          return;
+        }
+
+        this.autoNextDay();
+      },
+      startDate() {
+        this.autoNextDay();
+      },
     },
   },
   methods: {
@@ -58,22 +72,49 @@ export default {
       );
     },
     closeModal() {
+      this.meal = "";
       this.$emit("close");
     },
     async addNewMeal() {
-      if (this.meal) {
-        const ref = await shoppyFirestore.collection("cooky").add({
-          meal: this.meal,
-          startDate: this.startDate,
-          endDate: this.endDate,
-        });
-        await shoppyFirestore.collection("cooky").doc(ref.id).set(
-          {
-            key: ref.id,
-          },
-          { merge: true }
-        );
+      try {
+        if (this.meal && !this.existingKey) {
+          const ref = await shoppyFirestore.collection("cooky").add({
+            meal: this.meal,
+            startDate: this.startDate,
+            endDate: this.endDate,
+          });
+          await shoppyFirestore.collection("cooky").doc(ref.id).set(
+            {
+              key: ref.id,
+            },
+            { merge: true }
+          );
+        } else {
+          await shoppyFirestore
+            .collection("cooky")
+            .doc(this.existingKey)
+            .update({
+              meal: this.meal,
+              startDate: this.startDate,
+              endDate: this.endDate,
+            });
+          this.$emit("close");
+        }
         this.meal = "";
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async deleteMeal() {
+      try {
+        await shoppyFirestore
+          .collection("cooky")
+          .doc(this.existingKey)
+          .delete();
+        this.meal = "";
+        this.$emit("close");
+      } catch (error) {
+        console.log(error);
       }
     },
   },
@@ -158,7 +199,7 @@ button {
   line-height: 1.5;
   padding: 10px;
   cursor: pointer;
-  margin-top: 10px;
+  margin: 10px 0 0 10px;
   user-select: none;
 }
 </style>

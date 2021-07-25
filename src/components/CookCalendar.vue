@@ -17,9 +17,10 @@
           :key="index2"
           @click="setMeal(day)"
           :class="{ active: day === today.getDate() }"
+          :style="{ backgroundColor: setCookyCalendar(day, true) }"
         >
           {{ day }}
-          <p :ref="`day` + day"></p>
+          <p>{{ setCookyCalendar(day) }}</p>
         </td>
       </tr>
     </tbody>
@@ -28,7 +29,7 @@
     v-show="modalVisible"
     @click.self="modalVisible = false"
     @close="modalVisible = false"
-    :date="mealDate"
+    :date="mealData"
   />
 </template>
 
@@ -50,7 +51,7 @@ export default {
       weekday: ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"],
       month: localDateString,
       modalVisible: false,
-      mealDate: null,
+      mealData: null,
       mealList: null,
       unsubscribe: null,
     };
@@ -80,33 +81,50 @@ export default {
       }
       return monthArr;
     },
+    setCookyCalendar() {
+      return (day, color = false) => {
+        if (!this.mealList) {
+          return "";
+        }
+        const foundMeal = this.mealList.find(
+          (item) =>
+            (item.startNum === day && this.checkMonth(item.startDate)) ||
+            (item.endNum === day && this.checkMonth(item.endDate))
+        );
+        return color ? foundMeal?.color : foundMeal?.meal || "";
+      };
+    },
   },
   methods: {
     setMeal(day) {
-      this.mealDate = day;
+      const meal = this.mealList.find(
+        (item) => item.startNum === day || item.endNum === day
+      );
+      this.mealData = meal ?? { startNum: day };
       this.modalVisible = true;
     },
-    fillTableData(item, date, color) {
+    getMealDay(date) {
       date = new Date(date);
-      if (date.getMonth() !== this.today.getMonth()) {
-        return;
-      }
-      const refName = "day" + date.getDate();
-      this.$refs[refName].textContent = item.meal;
-      this.$refs[refName].parentNode.style.backgroundColor = color;
+      return date.getDate();
+    },
+    checkMonth(date) {
+      date = new Date(date);
+      return date.getMonth() === this.today.getMonth();
     },
   },
   async created() {
     try {
       this.unsubscribe = shoppyFirestore.collection("cooky").onSnapshot(
         (doc) => {
-          this.mealList = doc.docs.map((item) => item.data());
-          this.mealList.forEach((item) => {
-            const randomNum = Math.floor(Math.random() * (361 - 200) + 200);
-            const color = `hsl(${randomNum}, 80%, 70%)`;
-            this.fillTableData(item, item.startDate, color);
-            this.fillTableData(item, item.endDate, color);
-          });
+          this.mealList = doc.docs
+            .map((item) => item.data())
+            .map((item) => {
+              const randomNum = Math.floor(Math.random() * (361 - 200) + 200);
+              item.color = `hsl(${randomNum}, 80%, 70%)`;
+              item.startNum = this.getMealDay(item.startDate);
+              item.endNum = this.getMealDay(item.endDate);
+              return item;
+            });
         },
         (err) => console.log(err)
       );
@@ -168,6 +186,6 @@ tbody td.active {
 tbody td p {
   width: 100%;
   word-wrap: break-word;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 </style>
