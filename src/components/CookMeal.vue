@@ -1,0 +1,164 @@
+<template>
+  <main>
+    <span @click.self="closeModal">🌭🍕🍔🍳🧇🥞🍖🥩🍣🍩</span>
+    <span @click.self="closeModal">🥑🍐🍏🍈🍉🍋🍆🌽🍅🍓🥦</span>
+    <span @click.self="closeModal">🍿🧈🥯🌯🥗🍗🍙🍱🍍🥭🍎</span>
+    <span @click.self="closeModal">🥨🥐🍞🧈🥗🍙🍭🍹🥛🧁</span>
+    <section>
+      <h1>Was soll's sein?</h1>
+      <input type="text" v-model="meal" placeholder="?" />
+      <input type="date" v-model="startDate" />
+      <input type="date" v-model="endDate" />
+      <button @click="addNewMeal">➕</button>
+    </section>
+  </main>
+</template>
+
+<script>
+import { shoppyFirestore } from "@/firebase/config";
+
+export default {
+  name: "CookMeal",
+  props: ["date"],
+  data() {
+    return {
+      today: new Date(),
+      startDate: null,
+      endDate: null,
+      meal: "",
+    };
+  },
+  watch: {
+    date(date) {
+      this.startDate = this.dateFormat(
+        this.today.getFullYear(),
+        this.today.getMonth(),
+        date
+      );
+      this.autoNextDay();
+    },
+    startDate() {
+      this.autoNextDay();
+    },
+  },
+  methods: {
+    dateFormat(year, month, day) {
+      month = month + 1;
+      return `${year}-${month < 10 ? "0" + month : month}-${
+        day < 10 ? "0" + day : day
+      }`;
+    },
+    autoNextDay() {
+      let nextDay = new Date(this.startDate);
+      nextDay.setDate(nextDay.getDate() + 1);
+      this.endDate = this.dateFormat(
+        nextDay.getFullYear(),
+        nextDay.getMonth(),
+        nextDay.getDate()
+      );
+    },
+    closeModal() {
+      this.$emit("close");
+    },
+    async addNewMeal() {
+      if (this.meal) {
+        const ref = await shoppyFirestore.collection("cooky").add({
+          meal: this.meal,
+          startDate: this.startDate,
+          endDate: this.endDate,
+        });
+        await shoppyFirestore.collection("cooky").doc(ref.id).set(
+          {
+            key: ref.id,
+          },
+          { merge: true }
+        );
+        this.meal = "";
+      }
+    },
+  },
+};
+</script>
+
+<style scoped>
+main {
+  position: relative;
+  width: 500px;
+  max-width: 100vw;
+  height: 60vh;
+  margin: 0 auto;
+  background-color: rgb(0, 0, 0);
+  color: white;
+  border-radius: 10px;
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+span {
+  padding: 10px;
+  white-space: nowrap;
+  width: 100%;
+  height: 2rem;
+  font-size: 2rem;
+}
+
+span:nth-of-type(2) {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: rotate(-90deg) translate(-2rem, -200%);
+  transform-origin: top right;
+}
+
+span:nth-of-type(3) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: rotate(90deg) translate(2rem, -200%);
+  transform-origin: top left;
+}
+
+span:nth-of-type(4) {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  transform: translateY(-100%);
+}
+
+section {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+input {
+  font-size: 1.5rem;
+  margin: 10px 0;
+  padding: 5px;
+  color: "slategrey";
+  height: 45px;
+  text-align: center;
+  background-color: white;
+  border-radius: 10px;
+}
+
+[type="date"] {
+  display: block;
+  margin: 0 auto;
+  margin-top: 10px;
+}
+
+button {
+  font-size: 3rem;
+  height: 6rem;
+  width: 6rem;
+  border: 1px solid grey;
+  border-radius: 50%;
+  line-height: 1.5;
+  padding: 10px;
+  cursor: pointer;
+  margin-top: 10px;
+  user-select: none;
+}
+</style>

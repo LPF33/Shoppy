@@ -1,8 +1,15 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth.uid != null;
+    }
+
     match /shoppy/{document=**} {
-      allow read, write;
+      allow read, write: if signedIn();
+    }
+    match /cooky/{document=**} {
+      allow read, write: if signedIn();
     }
   }
 }
