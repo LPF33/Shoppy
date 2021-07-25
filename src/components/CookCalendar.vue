@@ -19,7 +19,7 @@
           :class="{ active: day === today.getDate() }"
           :style="{ backgroundColor: setCookyCalendar(day, true) }"
         >
-          {{ day }}
+          <p>{{ day }}</p>
           <p>{{ setCookyCalendar(day) }}</p>
         </td>
       </tr>
@@ -179,12 +179,13 @@ tbody td {
   padding-top: 5px;
 }
 
-tbody td.active {
-  color: rgb(2, 146, 103);
-  font-weight: bold;
+tbody td.active > p:first-child {
+  color: #ffeda3;
+  text-decoration: #ffeda3 overline;
+  text-decoration-thickness: 5px;
 }
 
-tbody td p {
+tbody td > p:nth-child(2) {
   width: 100%;
   word-wrap: break-word;
   overflow: hidden;
