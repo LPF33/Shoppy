@@ -180,7 +180,8 @@ tbody td {
 }
 
 tbody td.active {
-  background-color: rgb(2, 146, 103);
+  color: rgb(2, 146, 103);
+  font-weight: bold;
 }
 
 tbody td p {
