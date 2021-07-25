@@ -19,6 +19,7 @@
           :class="{ active: day === today.getDate() }"
         >
           {{ day }}
+          <p :ref="`day` + day"></p>
         </td>
       </tr>
     </tbody>
@@ -85,12 +86,27 @@ export default {
       this.mealDate = day;
       this.modalVisible = true;
     },
+    fillTableData(item, date, color) {
+      date = new Date(date);
+      if (date.getMonth() !== this.today.getMonth()) {
+        return;
+      }
+      const refName = "day" + date.getDate();
+      this.$refs[refName].textContent = item.meal;
+      this.$refs[refName].parentNode.style.backgroundColor = color;
+    },
   },
   async created() {
     try {
       this.unsubscribe = shoppyFirestore.collection("cooky").onSnapshot(
         (doc) => {
           this.mealList = doc.docs.map((item) => item.data());
+          this.mealList.forEach((item) => {
+            const randomNum = Math.floor(Math.random() * (361 - 200) + 200);
+            const color = `hsl(${randomNum}, 80%, 70%)`;
+            this.fillTableData(item, item.startDate, color);
+            this.fillTableData(item, item.endDate, color);
+          });
         },
         (err) => console.log(err)
       );
@@ -142,10 +158,16 @@ tbody td {
   height: calc(80vh / 7);
   background-color: rgb(0, 0, 0);
   color: rgb(255, 255, 255);
-  padding: 5px;
+  padding-top: 5px;
 }
 
 tbody td.active {
-  background-color: rgb(64, 187, 156);
+  background-color: rgb(2, 146, 103);
+}
+
+tbody td p {
+  width: 100%;
+  word-wrap: break-word;
+  overflow-x: hidden;
 }
 </style>
