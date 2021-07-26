@@ -1,9 +1,10 @@
 <template>
   <table>
     <caption>
+      <button @click="switchMonth('prev')">&lt;</button>
       {{
         month
-      }}
+      }}<button @click="switchMonth('next')">&gt;</button>
     </caption>
     <thead>
       <tr>
@@ -16,7 +17,7 @@
           v-for="(day, index2) in week"
           :key="index2"
           @click="setMeal(day)"
-          :class="{ active: day === today.getDate() }"
+          :class="{ active: checkDay(day) }"
           :style="{ backgroundColor: setCookyCalendar(day, true) }"
         >
           <p>{{ day }}</p>
@@ -35,7 +36,7 @@ export default {
   },
   data() {
     const today = new Date();
-    const options = { month: "long" };
+    const options = { month: "long", year: "numeric" };
     const localDateString = today.toLocaleString("de-DE", options);
     return {
       today,
@@ -48,17 +49,20 @@ export default {
     getDaysOfMonth() {
       const monthArr = [];
       monthArr.push(new Array(7).fill(""));
-      const today = new Date();
-      let currentDay = new Date(today.getFullYear(), today.getMonth());
-      let counterWeekArray = currentDay.getDay() - 1;
+      let currentDay = new Date(
+        this.today.getFullYear(),
+        this.today.getMonth()
+      );
+      let counterWeekArray =
+        currentDay.getDay() === 0 ? 6 : currentDay.getDay() - 1;
       let counterWeeksArray = 0;
-      while (currentDay.getMonth() === today.getMonth()) {
+      while (currentDay.getMonth() === this.today.getMonth()) {
         monthArr[counterWeeksArray][counterWeekArray] = currentDay.getDate();
         currentDay.setDate(currentDay.getDate() + 1);
         // if next day is a monday and not next month
         if (
           currentDay.getDay() === 1 &&
-          currentDay.getMonth() === today.getMonth()
+          currentDay.getMonth() === this.today.getMonth()
         ) {
           counterWeekArray = 0;
           counterWeeksArray++;
@@ -94,13 +98,63 @@ export default {
   methods: {
     setMeal(day) {
       const meal = this.mealList.find(
-        (item) => item.startNum === day || item.endNum === day
+        (item) =>
+          (item.startNum === day && this.checkMonth(item.startDate)) ||
+          (item.endNum === day && this.checkMonth(item.endDate))
       );
-      this.$emit("open-modal", meal ?? { startNum: day });
+      this.$emit(
+        "open-modal",
+        meal ?? {
+          startNum: day,
+          startDate: new Date(
+            this.today.getFullYear(),
+            this.today.getMonth(),
+            day
+          ),
+        }
+      );
     },
     checkMonth(date) {
       date = new Date(date);
       return date.getMonth() === this.today.getMonth();
+    },
+    checkDay(day) {
+      const currentDate = new Date();
+      if (
+        currentDate.getFullYear() === this.today.getFullYear() &&
+        currentDate.getMonth() === this.today.getMonth() &&
+        currentDate.getDate() === day
+      ) {
+        return true;
+      }
+      return false;
+    },
+    switchMonth(para) {
+      let now;
+      switch (para) {
+        case "next":
+          if (this.today.getMonth() === 11) {
+            now = new Date(this.today.getFullYear() + 1, 0);
+            break;
+          }
+          now = new Date(this.today.getFullYear(), this.today.getMonth() + 1);
+          break;
+        case "prev":
+          if (this.today.getMonth() === 0) {
+            now = new Date(this.today.getFullYear() - 1, 11);
+            break;
+          }
+          now = new Date(this.today.getFullYear(), this.today.getMonth() - 1);
+          break;
+        default:
+          now = new Date();
+          break;
+      }
+      this.today = now;
+      this.month = now.toLocaleString("de-DE", {
+        month: "long",
+        year: "numeric",
+      });
     },
   },
 };
@@ -124,6 +178,18 @@ caption {
   color: white;
 }
 
+caption button {
+  line-height: 1.5rem;
+  font-size: 1.5rem;
+  background-color: transparent;
+  color: white;
+  margin: 0 5px 0 10px;
+}
+
+caption button:hover {
+  color: #2940d3;
+}
+
 th {
   width: calc(100% / 7);
   padding: 10px;
@@ -139,10 +205,15 @@ tr {
 tbody td {
   width: calc(500px / 7);
   max-width: calc(100vw / 7);
-  height: calc(80vh / 7);
+  height: calc(70vh / 7);
   background-color: rgb(0, 0, 0);
   color: rgb(255, 255, 255);
   padding-top: 5px;
+  overflow: auto;
+}
+
+tbody td::-webkit-scrollbar {
+  width: 5px;
 }
 
 tbody td.active > p:first-child {

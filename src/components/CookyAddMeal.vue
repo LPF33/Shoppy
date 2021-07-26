@@ -43,17 +43,19 @@ export default {
         this.meal = "";
         this.existingKey = false;
 
-        this.startDate = this.dateFormat(
-          this.today.getFullYear(),
-          this.today.getMonth(),
-          dataObj.startNum
-        );
         if ("key" in dataObj) {
+          this.startDate = dataObj.startDate;
           this.existingKey = dataObj.key;
-          this.meal = dataObj?.meal || "";
+          this.meal = dataObj.meal || "";
           this.endDate = dataObj.endDate;
           return;
         }
+
+        this.startDate = this.dateFormat(
+          dataObj.startDate.getFullYear(),
+          dataObj.startDate.getMonth(),
+          dataObj.startNum
+        );
 
         this.autoNextDay();
       },
@@ -140,6 +142,11 @@ export default {
   border-radius: 10px;
   margin-top: 10px;
   overflow: hidden;
+}
+
+h1 {
+  background-color: black;
+  border-radius: 10px;
 }
 
 span {
