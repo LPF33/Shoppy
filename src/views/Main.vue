@@ -22,6 +22,7 @@ export default {
   },
   methods: {
     userLogout() {
+      this.$store.commit("unsubscribeFirebase");
       this.$store.commit("logout");
     },
   },

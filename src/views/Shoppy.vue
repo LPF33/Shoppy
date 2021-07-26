@@ -70,12 +70,12 @@ export default {
   },
   data() {
     return {
-      supermarktItems: null,
-      drogerieItems: null,
+      supermarktItems: this.$store.state.supermarktItems,
+      drogerieItems: this.$store.state.drogerieItems,
       category: "Supermarkt",
       visible: false,
-      unsubscribe: null,
-      index: 0,
+      index: this.$store.state.shoppyIndex,
+      unwatch: null,
     };
   },
   methods: {
@@ -91,7 +91,6 @@ export default {
         draggedItem.category === "Supermarkt"
           ? [...this.supermarktItems]
           : [...this.drogerieItems];
-      console.log(itemsList);
       let newDraggedIndex;
       if (newIndex === oldIndex) {
         return;
@@ -129,30 +128,19 @@ export default {
         .update({ list_id: item.list_id });
     },
   },
-  async created() {
-    try {
-      this.unsubscribe = shoppyFirestore.collection("shoppy").onSnapshot(
-        (doc) => {
-          let newDoc = doc.docs
-            .map((item) => item.data())
-            .sort((a, b) => a.list_id - b.list_id);
-          this.supermarktItems = newDoc.filter(
-            (item) => item.category === "Supermarkt"
-          );
-          this.drogerieItems = newDoc.filter(
-            (item) => item.category === "Drogerie"
-          );
-          this.index = newDoc[newDoc.length - 1].list_id + 1;
-        },
-        (err) => this.$store.commit("setError", err)
-      );
-    } catch (err) {
-      this.$store.commit("setError", err);
-    }
+  created() {
+    this.unwatch = this.$store.watch(
+      (state, getters) => getters.shoppyState,
+      (newValue) => {
+        this.supermarktItems = newValue.supermarktItems;
+        this.drogerieItems = newValue.drogerieItems;
+        this.index = newValue.shoppyIndex;
+      }
+    );
   },
-  unmounted() {
-    if (typeof this.unsubscribe == "function") {
-      this.unsubscribe();
+  beforeUnmount() {
+    if (typeof this.unwatch === "function") {
+      this.unwatch();
     }
   },
 };

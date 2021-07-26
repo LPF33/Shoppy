@@ -12,8 +12,21 @@ export default createStore({
       errorMessage: "",
       user: null,
       mealList: null,
-      unsubscribe: null,
+      supermarktItems: null,
+      drogerieItems: null,
+      shoppyIndex: null,
+      unsubscribeCooky: null,
+      unsubscribeShoppy: null,
     };
+  },
+  getters: {
+    shoppyState: (state) => {
+      return {
+        supermarktItems: state.supermarktItems,
+        drogerieItems: state.drogerieItems,
+        shoppyIndex: state.shoppyIndex,
+      };
+    },
   },
   mutations: {
     async setLogin(state) {
@@ -22,6 +35,11 @@ export default createStore({
     },
     async logout(state) {
       state.isAuthenticated = false;
+      state.user = null;
+      state.mealList = null;
+      state.supermarktItems = null;
+      state.drogerieItems = null;
+      state.shoppyIndex = null;
       try {
         await authFirebase.signOut();
       } catch (err) {
@@ -32,6 +50,53 @@ export default createStore({
     setError(state, msg) {
       state.error = true;
       state.errorMessage = msg;
+    },
+    unsubscribeFirebase(state) {
+      if (typeof state.unsubscribeCooky == "function") {
+        state.unsubscribeCooky();
+      }
+      if (typeof state.unsubscribeShoppy == "function") {
+        state.unsubscribeShoppy();
+      }
+    },
+    setMealsFirebase(state) {
+      try {
+        state.unsubscribeCooky = shoppyFirestore
+          .collection("cooky")
+          .onSnapshot((doc) => {
+            state.mealList = doc.docs.map((item) => item.data());
+          });
+      } catch (err) {
+        state.error = true;
+        state.errorMessage = err;
+      }
+    },
+    setShoppyFirebase(state) {
+      try {
+        state.unsubscribeShoppy = shoppyFirestore
+          .collection("shoppy")
+          .onSnapshot(
+            (doc) => {
+              let newDoc = doc.docs
+                .map((item) => item.data())
+                .sort((a, b) => a.list_id - b.list_id);
+              state.supermarktItems = newDoc.filter(
+                (item) => item.category === "Supermarkt"
+              );
+              state.drogerieItems = newDoc.filter(
+                (item) => item.category === "Drogerie"
+              );
+              state.shoppyIndex = newDoc[newDoc.length - 1].list_id + 1;
+            },
+            (err) => {
+              state.error = true;
+              state.errorMessage = err;
+            }
+          );
+      } catch (err) {
+        state.error = true;
+        state.errorMessage = err;
+      }
     },
   },
   actions: {
@@ -50,27 +115,12 @@ export default createStore({
           if (user) {
             state.user = user.email;
             commit("setLogin");
+            commit("setMealsFirebase");
+            commit("setShoppyFirebase");
           }
         });
       } catch (err) {
         commit("setError", err);
-      }
-    },
-    getMealsFirebase({ commit, state }) {
-      try {
-        state.unsubscribe = shoppyFirestore.collection("cooky").onSnapshot(
-          (doc) => {
-            state.mealList = doc.docs.map((item) => item.data());
-          },
-          () => commit("setError", "Firebase error")
-        );
-      } catch (err) {
-        commit("setError", err);
-      }
-    },
-    unsubscribeCookyFirebase({ state }) {
-      if (typeof state.unsubscribe == "function") {
-        state.unsubscribe();
       }
     },
   },

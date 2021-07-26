@@ -12,11 +12,10 @@ export default {
   components: { Navbar },
   mounted() {
     this.$store.dispatch("checkAuth");
-    this.$store.dispatch("getMealsFirebase");
   },
   unmounted() {
     // safe is safe ...
-    this.$store.dispatch("unsubscribeCookyFirebase");
+    this.$store.commit("unsubscribeFirebase");
   },
 };
 </script>
