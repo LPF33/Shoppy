@@ -30,7 +30,9 @@
 <script>
 export default {
   name: "CookyCalendar",
-  props: ["meals"],
+  props: {
+    meals: [Array, null],
+  },
   data() {
     const today = new Date();
     const options = { month: "long" };

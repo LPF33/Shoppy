@@ -22,7 +22,11 @@ import { shoppyFirestore } from "@/firebase/config";
 
 export default {
   name: "CookyAddMeal",
-  props: ["dataObject"],
+  props: {
+    dataObject: {
+      type: [Object, null],
+    },
+  },
   data() {
     return {
       today: new Date(),

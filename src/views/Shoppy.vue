@@ -74,7 +74,7 @@ export default {
       drogerieItems: this.$store.state.drogerieItems,
       category: "Supermarkt",
       visible: false,
-      index: this.$store.state.shoppyIndex,
+      index: this.$store.state.shoppyIndex ?? 0,
       unwatch: null,
     };
   },

@@ -15,7 +15,17 @@ import { shoppyFirestore } from "@/firebase/config";
 
 export default {
   name: "AddItem",
-  props: ["index", "selected"],
+  props: {
+    index: {
+      type: Number,
+      default: 1,
+    },
+    selected: {
+      type: String,
+      required: true,
+      default: "Supermarkt",
+    },
+  },
   data() {
     return {
       item: {

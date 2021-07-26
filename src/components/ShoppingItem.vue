@@ -13,7 +13,12 @@ import { shoppyFirestore } from "@/firebase/config";
 
 export default {
   name: "ShoppingItem",
-  props: ["item"],
+  props: {
+    item: {
+      type: Object,
+      required: true,
+    },
+  },
   methods: {
     async deleteItem() {
       try {
