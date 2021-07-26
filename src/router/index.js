@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Main from "../views/Main.vue";
 import Shoppy from "../views/Shoppy.vue";
 import Jambo from "../views/Jambo.vue";
-import Cook from "../views/Cook.vue";
+import Cooky from "../views/Cooky.vue";
 import store from "@/store";
 
 const routes = [
@@ -37,10 +37,10 @@ const routes = [
     component: () => import("../views/Budget.vue"),
   },
   {
-    path: "/cook",
-    name: "Cook",
+    path: "/cooky",
+    name: "Cooky",
     meta: { requiresAuth: true },
-    component: Cook,
+    component: Cooky,
   },
   {
     path: "/login",

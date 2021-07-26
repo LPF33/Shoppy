@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <div class="cooky-add-meal">
     <span @click.self="closeModal">🌭🍕🍔🍳🧇🥞🍖🥩🍣🍩</span>
     <span @click.self="closeModal">🥑🍐🍏🍈🍉🍋🍆🌽🍅🍓🥦</span>
     <span @click.self="closeModal">🍿🧈🥯🌯🥗🍗🍙🍱🍍🥭🍎</span>
@@ -14,15 +14,15 @@
         ❌
       </button>
     </section>
-  </main>
+  </div>
 </template>
 
 <script>
 import { shoppyFirestore } from "@/firebase/config";
 
 export default {
-  name: "CookMeal",
-  props: ["date"],
+  name: "CookyAddMeal",
+  props: ["dataObject"],
   data() {
     return {
       today: new Date(),
@@ -33,21 +33,21 @@ export default {
     };
   },
   watch: {
-    date: {
+    dataObject: {
       deep: true,
-      handler(dataObject) {
+      handler(dataObj) {
         this.meal = "";
         this.existingKey = false;
 
         this.startDate = this.dateFormat(
           this.today.getFullYear(),
           this.today.getMonth(),
-          dataObject.startNum
+          dataObj.startNum
         );
-        if ("key" in dataObject) {
-          this.existingKey = dataObject.key;
-          this.meal = dataObject?.meal || "";
-          this.endDate = dataObject.endDate;
+        if ("key" in dataObj) {
+          this.existingKey = dataObj.key;
+          this.meal = dataObj?.meal || "";
+          this.endDate = dataObj.endDate;
           return;
         }
 
@@ -79,6 +79,7 @@ export default {
     },
     async addNewMeal() {
       try {
+        // insert new data
         if (this.meal && !this.existingKey) {
           const ref = await shoppyFirestore.collection("cooky").add({
             meal: this.meal,
@@ -92,6 +93,7 @@ export default {
             { merge: true }
           );
         } else {
+          // or do update existing data
           await shoppyFirestore
             .collection("cooky")
             .doc(this.existingKey)
@@ -113,7 +115,6 @@ export default {
           .collection("cooky")
           .doc(this.existingKey)
           .delete();
-        this.meal = "";
         this.$emit("close");
       } catch (error) {
         console.log(error);
@@ -124,7 +125,7 @@ export default {
 </script>
 
 <style scoped>
-main {
+.cooky-add-meal {
   position: relative;
   width: 500px;
   max-width: 100vw;

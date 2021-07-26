@@ -2,7 +2,7 @@
   <nav v-if="isLoggedIn">
     <router-link :to="{ name: 'Main' }">Main</router-link>
     <router-link :to="{ name: 'Shoppy' }">Shoppy</router-link>
-    <router-link :to="{ name: 'Cook' }">Cooky</router-link>
+    <router-link :to="{ name: 'Cooky' }">Cooky</router-link>
   </nav>
   <nav v-else>
     <router-link :to="{ name: 'Login' }">Login</router-link>

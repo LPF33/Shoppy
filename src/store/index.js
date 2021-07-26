@@ -1,5 +1,6 @@
 import { createStore } from "vuex";
 import { authFirebase } from "@/firebase/config.js";
+import { shoppyFirestore } from "@/firebase/config";
 import firebase from "firebase/app";
 import router from "@/router";
 
@@ -10,6 +11,8 @@ export default createStore({
       error: false,
       errorMessage: "",
       user: null,
+      mealList: null,
+      unsubscribe: null,
     };
   },
   mutations: {
@@ -48,6 +51,20 @@ export default createStore({
           commit("setLogin");
         }
       });
+    },
+    getMealsFirebase({ commit, state }) {
+      state.unsubscribe = shoppyFirestore.collection("cooky").onSnapshot(
+        (doc) => {
+          console.log("m");
+          state.mealList = doc.docs.map((item) => item.data());
+        },
+        () => commit("setError", "Firebase error")
+      );
+    },
+    unsubscribeCookyFirebase({ state }) {
+      if (typeof state.unsubscribe == "function") {
+        state.unsubscribe();
+      }
     },
   },
   modules: {},

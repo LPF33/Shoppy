@@ -12,6 +12,11 @@ export default {
   components: { Navbar },
   mounted() {
     this.$store.dispatch("checkAuth");
+    this.$store.dispatch("getMealsFirebase");
+  },
+  unmounted() {
+    // ridiculous but ...
+    this.$store.dispatch("unsubscribeCookyFirebase");
   },
 };
 </script>

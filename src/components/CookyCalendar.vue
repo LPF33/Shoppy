@@ -1,5 +1,5 @@
 <template>
-  <table v-show="!modalVisible">
+  <table>
     <caption>
       {{
         month
@@ -25,23 +25,12 @@
       </tr>
     </tbody>
   </table>
-  <CookMeal
-    v-show="modalVisible"
-    @click.self="modalVisible = false"
-    @close="modalVisible = false"
-    :date="mealData"
-  />
 </template>
 
 <script>
-import CookMeal from "@/components/CookMeal.vue";
-import { shoppyFirestore } from "@/firebase/config";
-
 export default {
-  name: "CookCalendar",
-  components: {
-    CookMeal,
-  },
+  name: "CookyCalendar",
+  props: ["meals"],
   data() {
     const today = new Date();
     const options = { month: "long" };
@@ -50,10 +39,7 @@ export default {
       today,
       weekday: ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"],
       month: localDateString,
-      modalVisible: false,
-      mealData: null,
-      mealList: null,
-      unsubscribe: null,
+      mealList: this.meals,
     };
   },
   computed: {
@@ -95,47 +81,25 @@ export default {
       };
     },
   },
+  watch: {
+    meals: {
+      deep: true,
+      handler(newMeals) {
+        this.mealList = newMeals;
+      },
+    },
+  },
   methods: {
     setMeal(day) {
       const meal = this.mealList.find(
         (item) => item.startNum === day || item.endNum === day
       );
-      this.mealData = meal ?? { startNum: day };
-      this.modalVisible = true;
-    },
-    getMealDay(date) {
-      date = new Date(date);
-      return date.getDate();
+      this.$emit("open-modal", meal ?? { startNum: day });
     },
     checkMonth(date) {
       date = new Date(date);
       return date.getMonth() === this.today.getMonth();
     },
-  },
-  async created() {
-    try {
-      this.unsubscribe = shoppyFirestore.collection("cooky").onSnapshot(
-        (doc) => {
-          this.mealList = doc.docs
-            .map((item) => item.data())
-            .map((item) => {
-              const randomNum = Math.floor(Math.random() * (361 - 200) + 200);
-              item.color = `hsl(${randomNum}, 80%, 70%)`;
-              item.startNum = this.getMealDay(item.startDate);
-              item.endNum = this.getMealDay(item.endDate);
-              return item;
-            });
-        },
-        (err) => console.log(err)
-      );
-    } catch (err) {
-      console.log(err);
-    }
-  },
-  unmounted() {
-    if (typeof this.unsubscribe == "function") {
-      this.unsubscribe();
-    }
   },
 };
 </script>
