@@ -7,6 +7,7 @@
   <nav v-else>
     <router-link :to="{ name: 'Login' }">Login</router-link>
   </nav>
+  <div v-if="error" class="error-nav">❗</div>
 </template>
 
 <script>
@@ -15,6 +16,9 @@ export default {
   computed: {
     isLoggedIn: function () {
       return this.$store.state.isAuthenticated;
+    },
+    error() {
+      return this.$store.state.error;
     },
   },
 };
@@ -43,5 +47,19 @@ nav a {
 
 nav a.router-link-exact-active {
   color: #39a9cb;
+}
+
+.error-nav {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  font-size: 2rem;
+  height: 3rem;
+  width: 3rem;
+  border: 1px solid grey;
+  border-radius: 50%;
+  line-height: 1.5;
+  text-align: center;
+  background-color: red;
 }
 </style>

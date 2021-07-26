@@ -45,21 +45,28 @@ export default createStore({
       }
     },
     checkAuth({ commit, state }) {
-      authFirebase.onAuthStateChanged((user) => {
-        if (user) {
-          state.user = user.email;
-          commit("setLogin");
-        }
-      });
+      try {
+        authFirebase.onAuthStateChanged((user) => {
+          if (user) {
+            state.user = user.email;
+            commit("setLogin");
+          }
+        });
+      } catch (err) {
+        commit("setError", err);
+      }
     },
     getMealsFirebase({ commit, state }) {
-      state.unsubscribe = shoppyFirestore.collection("cooky").onSnapshot(
-        (doc) => {
-          console.log("m");
-          state.mealList = doc.docs.map((item) => item.data());
-        },
-        () => commit("setError", "Firebase error")
-      );
+      try {
+        state.unsubscribe = shoppyFirestore.collection("cooky").onSnapshot(
+          (doc) => {
+            state.mealList = doc.docs.map((item) => item.data());
+          },
+          () => commit("setError", "Firebase error")
+        );
+      } catch (err) {
+        commit("setError", err);
+      }
     },
     unsubscribeCookyFirebase({ state }) {
       if (typeof state.unsubscribe == "function") {

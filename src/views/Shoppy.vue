@@ -144,10 +144,10 @@ export default {
           );
           this.index = newDoc[newDoc.length - 1].list_id + 1;
         },
-        (err) => console.log(err)
+        (err) => this.$store.commit("setError", err)
       );
     } catch (err) {
-      console.log(err);
+      this.$store.commit("setError", err);
     }
   },
   unmounted() {

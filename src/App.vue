@@ -15,7 +15,7 @@ export default {
     this.$store.dispatch("getMealsFirebase");
   },
   unmounted() {
-    // ridiculous but ...
+    // safe is safe ...
     this.$store.dispatch("unsubscribeCookyFirebase");
   },
 };

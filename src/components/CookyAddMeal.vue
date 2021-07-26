@@ -106,7 +106,7 @@ export default {
         }
         this.meal = "";
       } catch (error) {
-        console.log(error);
+        this.$store.commit("setError", error);
       }
     },
     async deleteMeal() {
@@ -117,7 +117,7 @@ export default {
           .delete();
         this.$emit("close");
       } catch (error) {
-        console.log(error);
+        this.$store.commit("setError", error);
       }
     },
   },
