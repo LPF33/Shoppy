@@ -1,10 +1,10 @@
 <template>
-  <table>
+  <table ref="tableDom">
     <caption>
-      <button @click="switchMonth('prev')">&lt;</button>
+      <button @click="switchMonth('LEFT')">&lt;</button>
       {{
         month
-      }}<button @click="switchMonth('next')">&gt;</button>
+      }}<button @click="switchMonth('RIGHT')">&gt;</button>
     </caption>
     <thead>
       <tr>
@@ -29,21 +29,59 @@
 </template>
 
 <script>
+import { ref, watch } from "vue";
+import useDetectSwipe from "@/composables/useDetectSwipe.js";
+
 export default {
   name: "CookyCalendar",
   props: {
     meals: [Array, null],
   },
   data() {
-    const today = new Date();
-    const options = { month: "long", year: "numeric" };
-    const localDateString = today.toLocaleString("de-DE", options);
     return {
-      today,
       weekday: ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"],
-      month: localDateString,
       mealList: this.meals,
     };
+  },
+  setup() {
+    const tableDom = ref(null);
+    const { swipeDirection } = useDetectSwipe(tableDom);
+    const today = ref(new Date());
+    const options = { month: "long", year: "numeric" };
+    const month = ref(today.value.toLocaleString("de-DE", options));
+
+    watch(swipeDirection, function (newVal) {
+      switchMonth(newVal);
+    });
+
+    function switchMonth(para) {
+      let now;
+      switch (para) {
+        case "RIGHT":
+          if (today.value.getMonth() === 11) {
+            now = new Date(today.value.getFullYear() + 1, 0);
+            break;
+          }
+          now = new Date(today.value.getFullYear(), today.value.getMonth() + 1);
+          break;
+        case "LEFT":
+          if (today.value.getMonth() === 0) {
+            now = new Date(today.value.getFullYear() - 1, 11);
+            break;
+          }
+          now = new Date(today.value.getFullYear(), today.value.getMonth() - 1);
+          break;
+        default:
+          return;
+      }
+      today.value = now;
+      month.value = now.toLocaleString("de-DE", {
+        month: "long",
+        year: "numeric",
+      });
+    }
+
+    return { tableDom, switchMonth, month, today, swipeDirection };
   },
   computed: {
     getDaysOfMonth() {
@@ -128,33 +166,6 @@ export default {
         return true;
       }
       return false;
-    },
-    switchMonth(para) {
-      let now;
-      switch (para) {
-        case "next":
-          if (this.today.getMonth() === 11) {
-            now = new Date(this.today.getFullYear() + 1, 0);
-            break;
-          }
-          now = new Date(this.today.getFullYear(), this.today.getMonth() + 1);
-          break;
-        case "prev":
-          if (this.today.getMonth() === 0) {
-            now = new Date(this.today.getFullYear() - 1, 11);
-            break;
-          }
-          now = new Date(this.today.getFullYear(), this.today.getMonth() - 1);
-          break;
-        default:
-          now = new Date();
-          break;
-      }
-      this.today = now;
-      this.month = now.toLocaleString("de-DE", {
-        month: "long",
-        year: "numeric",
-      });
     },
   },
 };
