@@ -1,10 +1,10 @@
 # shoppy
 
-This app was a long time wish of my girlfriend.
-🛒 Draggable Shopping list with Firebase Realtime data synchronization.
-🍽 Cooky calendar, to save the meals, we will cook in the future.
-For the calendar I did not use a library, built it myself, quite a nice, interesting task.
-📲 Used the Composition API to write and use a [Composition Function](https://github.com/LPF33/shoppy/blob/master/src/composables/useDetectSwipe.js) for detecting the Swipe-Direction to switch to the previous or next month.
+This app was a long time wish of my girlfriend.\
+🛒 Draggable Shopping list with Firebase Realtime data synchronization.\
+🍽 Cooky calendar, to save the meals, we will cook in the future.\
+For the calendar I did not use a library, built it myself, quite a nice, interesting task.\
+📲 Used the Composition API to write and use a [Composition Function](https://github.com/LPF33/shoppy/blob/master/src/composables/useDetectSwipe.js) for detecting the Swipe-Direction to switch to the previous or next month.\
 🎲 Jambo-Component: Just a simple Counter for a board game, we play usually. I'm too lazy to always turn over the game tiles to count each turn. So this app makes my life easier.
 
 Next steps:
