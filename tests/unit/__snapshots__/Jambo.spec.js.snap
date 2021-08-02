@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing the Jambo component Click on first button 3 times , should increment counter 1`] = `
+<div class="jambo-section">
+  <h1>Jambo</h1>
+  <h2>Spielzug: 3</h2>
+  <section>
+    <div class="runde">🎲</div>
+    <div class="runde">🎲</div>
+    <div class="runde">🎲</div>
+  </section><button>➕</button><button>⚪</button>
+</div>
+`;
+
+exports[`Testing the Jambo component Click on first button 4 times, click on reset button, should reset counter 1`] = `
+<div class="jambo-section">
+  <h1>Jambo</h1>
+  <h2>Start</h2>
+  <!--v-if--><button>➕</button><button>⚪</button>
+</div>
+`;
+
+exports[`Testing the Jambo component Click on first button 6 times, should reset counter 1`] = `
+<div class="jambo-section">
+  <h1>Jambo</h1>
+  <h2>Start</h2>
+  <!--v-if--><button>➕</button><button>⚪</button>
+</div>
+`;
+
+exports[`Testing the Jambo component Click on first button, should increment counter 1`] = `
+<div class="jambo-section">
+  <h1>Jambo</h1>
+  <h2>Spielzug: 1</h2>
+  <section>
+    <div class="runde">🎲</div>
+  </section><button>➕</button><button>⚪</button>
+</div>
+`;
+
+exports[`Testing the Jambo component Initial Jambo component is mounted correctly 1`] = `
+<div class="jambo-section">
+  <h1>Jambo</h1>
+  <h2>Start</h2>
+  <!--v-if--><button>➕</button><button>⚪</button>
+</div>
+`;
