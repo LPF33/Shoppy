@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing the App component When user logged in, trying to go to '/login' redirected to '/' 1`] = `
+<div id="view">
+  <router-view-stub name="default"></router-view-stub>
+</div>
+<navbar-stub></navbar-stub>
+`;
+
+exports[`Testing the App component When user not logged in, trying to go to '/' redirected to '/login' 1`] = `
+<div id="view">
+  <router-view-stub name="default"></router-view-stub>
+</div>
+<navbar-stub></navbar-stub>
+`;
