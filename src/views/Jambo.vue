@@ -4,10 +4,10 @@
     <h2 v-if="!counter">Start</h2>
     <h2 v-else>Spielzug: {{ counter }}</h2>
     <section v-if="visual">
-      <div v-for="(item, index) in visual" :key="index" id="runde">🎲</div>
+      <div v-for="(item, index) in visual" :key="index" class="runde">🎲</div>
     </section>
-    <div id="plus" @click="increment">➕</div>
-    <div id="plus" @click="reset">⚪</div>
+    <button @click="increment">➕</button>
+    <button @click="reset">⚪</button>
   </div>
 </template>
 
@@ -55,7 +55,8 @@ h2 {
   margin: 10px 0;
 }
 
-#plus {
+button {
+  display: block;
   font-size: 3rem;
   height: 6rem;
   width: 6rem;
@@ -69,7 +70,7 @@ h2 {
   box-shadow: 0 0 8px black;
 }
 
-#runde {
+.runde {
   font-size: 3rem;
 }
 </style>
