@@ -128,15 +128,18 @@ describe("Testing the App component", () => {
     router.push("/shoppy");
     await router.isReady();
 
-    const wrapper = shallowMount(App, {
+    const wrapper = mount(App, {
       global: {
         plugins: [router],
         mocks: { $store },
+        stubs: {
+          Shoppy: true,
+        },
       },
     });
 
     expect(wrapper.vm.$route.path).toBe("/shoppy");
-    expect(wrapper.findComponent(Shoppy).exists).toBeTruthy();
+    expect(wrapper.findComponent(Shoppy).exists()).toBeTruthy();
   });
 
   it("When user logged in, navigating to '/cooky' will render Cooky component", async () => {
@@ -144,15 +147,18 @@ describe("Testing the App component", () => {
     router.push("/cooky");
     await router.isReady();
 
-    const wrapper = shallowMount(App, {
+    const wrapper = mount(App, {
       global: {
         plugins: [router],
         mocks: { $store },
+        stubs: {
+          Cooky: true,
+        },
       },
     });
 
     expect(wrapper.vm.$route.path).toBe("/cooky");
-    expect(wrapper.findComponent(Cooky).exists).toBeTruthy();
+    expect(wrapper.findComponent(Cooky).exists()).toBeTruthy();
   });
 
   it("When user logged in, navigating to '/jambo' will render Jambo component", async () => {
@@ -160,14 +166,17 @@ describe("Testing the App component", () => {
     router.push("/jambo");
     await router.isReady();
 
-    const wrapper = shallowMount(App, {
+    const wrapper = mount(App, {
       global: {
         plugins: [router],
         mocks: { $store },
+        stubs: {
+          Jambo: true,
+        },
       },
     });
 
     expect(wrapper.vm.$route.path).toBe("/jambo");
-    expect(wrapper.findComponent(Jambo).exists).toBeTruthy();
+    expect(wrapper.findComponent(Jambo).exists()).toBeTruthy();
   });
 });

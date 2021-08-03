@@ -19,16 +19,20 @@ const router = createRouter({
   routes,
 });
 
+const mountNavbar = () => {
+  return mount(Navbar, {
+    global: {
+      plugins: [router],
+      mocks: { $store },
+    },
+  });
+};
+
 describe("Testing the Navbar component", () => {
   it("When user is not logged in, Navbar should have on router-link", async () => {
     router.push("/");
     await router.isReady();
-    const wrapper = mount(Navbar, {
-      global: {
-        plugins: [router],
-        mocks: { $store },
-      },
-    });
+    const wrapper = mountNavbar();
 
     expect(wrapper.html()).toMatchSnapshot();
     expect(wrapper.find("nav").exists()).toBeTruthy();
@@ -41,12 +45,7 @@ describe("Testing the Navbar component", () => {
     $store.state.isAuthenticated = true;
     router.push("/");
     await router.isReady();
-    const wrapper = mount(Navbar, {
-      global: {
-        plugins: [router],
-        mocks: { $store },
-      },
-    });
+    const wrapper = mountNavbar();
 
     expect(wrapper.html()).toMatchSnapshot();
     expect(wrapper.find("nav").exists()).toBeTruthy();
@@ -65,12 +64,8 @@ describe("Testing the Navbar component", () => {
     $store.state.isAuthenticated = true;
     router.push("/shoppy");
     await router.isReady();
-    const wrapper = mount(Navbar, {
-      global: {
-        plugins: [router],
-        mocks: { $store },
-      },
-    });
+    const wrapper = mountNavbar();
+
     await flushPromises();
     expect(wrapper.html()).toMatchSnapshot();
     expect(wrapper.find("nav").exists()).toBeTruthy();
@@ -85,12 +80,8 @@ describe("Testing the Navbar component", () => {
     $store.state.isAuthenticated = true;
     router.push("/cooky");
     await router.isReady();
-    const wrapper = mount(Navbar, {
-      global: {
-        plugins: [router],
-        mocks: { $store },
-      },
-    });
+    const wrapper = mountNavbar();
+
     await flushPromises();
     expect(wrapper.html()).toMatchSnapshot();
     expect(wrapper.find("nav").exists()).toBeTruthy();
@@ -104,13 +95,7 @@ describe("Testing the Navbar component", () => {
   it("When error occurs, div with CSS class error-nav gets rendered", async () => {
     $store.state.error = true;
     await router.isReady();
-
-    const wrapper = mount(Navbar, {
-      global: {
-        plugins: [router],
-        mocks: { $store },
-      },
-    });
+    const wrapper = mountNavbar();
 
     expect(wrapper.html()).toMatchSnapshot();
     expect(wrapper.find(".error-nav").exists()).toBeTruthy();
@@ -120,13 +105,7 @@ describe("Testing the Navbar component", () => {
   it("Click on router-link with name Shoppy navigates to '/shoppy'", async () => {
     $store.state.isAuthenticated = true;
     await router.isReady();
-
-    const wrapper = mount(Navbar, {
-      global: {
-        plugins: [router],
-        mocks: { $store },
-      },
-    });
+    const wrapper = mountNavbar();
 
     const shoppyLink = wrapper.findAll("a")[1];
     expect(shoppyLink.attributes("href")).toBe("/shoppy");
@@ -138,13 +117,7 @@ describe("Testing the Navbar component", () => {
   it("Click on router-link with name Cooky navigates to '/cooky'", async () => {
     $store.state.isAuthenticated = true;
     await router.isReady();
-
-    const wrapper = mount(Navbar, {
-      global: {
-        plugins: [router],
-        mocks: { $store },
-      },
-    });
+    const wrapper = mountNavbar();
 
     const cookyLink = wrapper.findAll("a")[2];
     expect(cookyLink.attributes("href")).toBe("/cooky");
