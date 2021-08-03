@@ -20,7 +20,6 @@ describe("Testing the Jambo component", () => {
 
     const incrementButton = wrapper.findAll(".jambo-section > button")[0];
     await incrementButton.trigger("click");
-    await wrapper.vm.$nextTick();
     expect(wrapper.find("h2").text()).toBe("Spielzug: 1");
     expect(wrapper.findAll("section")).toHaveLength(1);
     expect(wrapper.findAll("section > .runde")).toHaveLength(1);
@@ -35,7 +34,6 @@ describe("Testing the Jambo component", () => {
     await incrementButton.trigger("click");
     await incrementButton.trigger("click");
     await incrementButton.trigger("click");
-    await wrapper.vm.$nextTick();
     expect(wrapper.find("h2").text()).toBe("Spielzug: 3");
     expect(wrapper.findAll("section > .runde")).toHaveLength(3);
     expect(wrapper.html()).toMatchSnapshot();
@@ -50,11 +48,11 @@ describe("Testing the Jambo component", () => {
     await incrementButton.trigger("click");
     await incrementButton.trigger("click");
     await incrementButton.trigger("click");
-    await wrapper.vm.$nextTick();
+
     expect(wrapper.find("h2").text()).toBe("Spielzug: 5");
     expect(wrapper.findAll("section > .runde")).toHaveLength(5);
     await incrementButton.trigger("click");
-    await wrapper.vm.$nextTick();
+
     expect(wrapper.find("h2").text()).toBe("Start");
     expect(wrapper.find("section").exists()).toBeFalsy();
     expect(wrapper.html()).toMatchSnapshot();
@@ -68,13 +66,12 @@ describe("Testing the Jambo component", () => {
     await incrementButton.trigger("click");
     await incrementButton.trigger("click");
     await incrementButton.trigger("click");
-    await wrapper.vm.$nextTick();
+
     expect(wrapper.find("h2").text()).toBe("Spielzug: 4");
     expect(wrapper.findAll("section > .runde")).toHaveLength(4);
 
     const resetButton = wrapper.findAll(".jambo-section > button")[1];
     await resetButton.trigger("click");
-    await wrapper.vm.$nextTick();
     expect(wrapper.find("h2").text()).toBe("Start");
     expect(wrapper.find("section").exists()).toBeFalsy();
     expect(wrapper.html()).toMatchSnapshot();
