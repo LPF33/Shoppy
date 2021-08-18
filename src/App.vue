@@ -1,7 +1,7 @@
 <template>
-  <div id="view">
+  <main>
     <router-view />
-  </div>
+  </main>
   <Navbar />
 </template>
 
@@ -36,7 +36,7 @@ export default {
   height: 100vh;
 }
 
-#view {
+main {
   flex-grow: 1;
 }
 

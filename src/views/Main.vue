@@ -1,6 +1,6 @@
 <template>
-  <main>
-    <img :src="`${publicPath}img/wedding.JPG`" />
+  <section>
+    <img :src="`${publicPath}img/wedding.JPG`" alt="wedding-photo" />
     <div v-if="schaetzchen" v-html="greeting" class="header"></div>
     <div v-else class="emoji">🦋</div>
     <aside>{{ wedding }} Tage bis zur Hochzeit</aside>
@@ -9,7 +9,7 @@
       <router-link :to="{ name: 'Jambo' }" class="buttons">🎲</router-link>
       <button @click="userLogout" class="buttons">🔒</button>
     </footer>
-  </main>
+  </section>
 </template>
 
 <script>
@@ -59,7 +59,7 @@ export default {
 </script>
 
 <style scoped>
-main {
+section {
   position: relative;
   background-color: #ffffff;
   height: 100%;

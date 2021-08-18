@@ -1,8 +1,8 @@
 <template>
-  <div class="shoppy-section" @click.self="setVisible">
+  <section @click.self="setVisible">
     <h1>Shoppy</h1>
-    <main>
-      <section class="section-draggable" v-if="category === 'Supermarkt'">
+    <div>
+      <div class="section-draggable" v-if="category === 'Supermarkt'">
         <VueDraggableNext
           v-model="supermarktItems"
           @change="onDrop"
@@ -17,8 +17,8 @@
             :item="it"
           />
         </div>
-      </section>
-      <section class="section-draggable" v-if="category === 'Drogerie'">
+      </div>
+      <div class="section-draggable" v-if="category === 'Drogerie'">
         <VueDraggableNext
           v-model="drogerieItems"
           @change="onDrop"
@@ -29,15 +29,15 @@
         <div>
           <ShoppingItem v-for="it in drogerieItems" :key="it.key" :item="it" />
         </div>
-      </section>
-    </main>
+      </div>
+    </div>
     <AddItem
       v-if="visible"
       @close="setVisible"
       :index="index"
       :selected="category"
     />
-    <div class="buttons" v-else>
+    <footer v-else>
       <button
         @click="switchCategory('Supermarkt')"
         :class="{ active: category === 'Supermarkt' }"
@@ -51,8 +51,8 @@
       >
         🧴
       </button>
-    </div>
-  </div>
+    </footer>
+  </section>
 </template>
 
 <script>
@@ -147,7 +147,7 @@ export default {
 </script>
 
 <style scoped>
-.shoppy-section {
+section {
   position: relative;
   background-color: #232323;
   width: 100%;
@@ -166,7 +166,7 @@ h1 {
   height: 1.5em;
 }
 
-main {
+section > div:first-child {
   position: absolute;
   top: calc(2rem + 20px);
   bottom: 8rem;
@@ -196,7 +196,7 @@ main {
   cursor: move;
 }
 
-.buttons {
+footer {
   position: absolute;
   bottom: 10px;
   margin-top: 2rem;

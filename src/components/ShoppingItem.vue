@@ -23,8 +23,8 @@ export default {
     async deleteItem() {
       try {
         await shoppyFirestore.collection("shoppy").doc(this.item.key).delete();
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        this.$store.commit("setError", error);
       }
     },
     async selectedItem() {
@@ -33,8 +33,8 @@ export default {
           .collection("shoppy")
           .doc(this.item.key)
           .update({ done: !this.item.done });
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        this.$store.commit("setError", error);
       }
     },
   },
