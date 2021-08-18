@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <section>
     <h1>👩‍🍳 👨‍🍳</h1>
     <h1>Wann kochen wir was?</h1>
     <CookyCalendar
@@ -13,7 +13,7 @@
       @close="modalVisible = false"
       :data-object="mealData"
     />
-  </main>
+  </section>
 </template>
 
 <script>
@@ -57,7 +57,7 @@ export default {
 </script>
 
 <style scoped>
-main {
+section {
   position: relative;
   background-color: #39a9cb;
   width: 100%;

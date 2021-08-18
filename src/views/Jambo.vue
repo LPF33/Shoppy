@@ -1,14 +1,14 @@
 <template>
-  <div class="jambo-section">
+  <section>
     <h1>Jambo</h1>
     <h2 v-if="!counter">Start</h2>
     <h2 v-else>Spielzug: {{ counter }}</h2>
-    <section v-if="visual">
+    <div v-if="visual">
       <div v-for="(item, index) in visual" :key="index" class="runde">🎲</div>
-    </section>
+    </div>
     <button @click="increment">➕</button>
     <button @click="reset">⚪</button>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -40,7 +40,7 @@ export default {
 </script>
 
 <style scoped>
-.jambo-section {
+section {
   width: 100%;
   height: 100%;
   display: flex;
@@ -62,6 +62,7 @@ button {
   width: 6rem;
   border: 1px solid grey;
   border-radius: 50%;
+  background-color: transparent;
   line-height: 1.5;
   padding: 10px;
   cursor: pointer;

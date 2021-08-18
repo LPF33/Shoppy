@@ -4,7 +4,7 @@
     <span @click.self="closeModal">🥑🍐🍏🍈🍉🍋🍆🌽🍅🍓🥦</span>
     <span @click.self="closeModal">🍿🧈🥯🌯🥗🍗🍙🍱🍍🥭🍎</span>
     <span @click.self="closeModal">🥨🥐🍞🧈🥗🍙🍭🍹🥛🧁</span>
-    <section>
+    <form @submit.prevent>
       <h1>Was soll's sein?</h1>
       <input type="text" v-model="meal" placeholder="?" />
       <input type="date" v-model="startDate" />
@@ -13,7 +13,7 @@
       <button id="delete-meal" v-if="existingKey" @click="deleteMeal">
         ❌
       </button>
-    </section>
+    </form>
   </div>
 </template>
 
@@ -180,7 +180,7 @@ span:nth-of-type(4) {
   transform: translateY(-100%);
 }
 
-section {
+form {
   position: absolute;
   top: 50%;
   left: 50%;
