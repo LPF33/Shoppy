@@ -66,10 +66,7 @@ export default {
   },
   methods: {
     dateFormat(year, month, day) {
-      month = month + 1;
-      return `${year}-${month < 10 ? "0" + month : month}-${
-        day < 10 ? "0" + day : day
-      }`;
+      return `${year}-${this.padTime(++month)}-${this.padTime(day)}`;
     },
     autoNextDay() {
       let nextDay = new Date(this.startDate);
@@ -79,6 +76,9 @@ export default {
         nextDay.getMonth(),
         nextDay.getDate()
       );
+    },
+    padTime(val, len = 2) {
+      return val.toString().padStart(len, "0");
     },
     closeModal() {
       this.$emit("close");
