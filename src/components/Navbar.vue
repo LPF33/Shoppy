@@ -4,9 +4,6 @@
     <router-link :to="{ name: 'Shoppy' }">Shoppy</router-link>
     <router-link :to="{ name: 'Cooky' }">Cooky</router-link>
   </nav>
-  <nav v-else>
-    <router-link :to="{ name: 'Login' }">Login</router-link>
-  </nav>
   <div v-if="error" class="error-nav">❗</div>
 </template>
 

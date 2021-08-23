@@ -39,11 +39,4 @@ export default {
 main {
   flex-grow: 1;
 }
-
-.error {
-  background-color: red;
-  text-align: center;
-  font-size: 1.5rem;
-  padding: 10px;
-}
 </style>

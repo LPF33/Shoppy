@@ -31,6 +31,7 @@ export default createStore({
   mutations: {
     async setLogin(state) {
       state.isAuthenticated = true;
+      state.error = false;
       router.push("/");
     },
     async logout(state) {
