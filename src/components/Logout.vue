@@ -24,7 +24,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #logout-modal {
   position: absolute;
   left: 50%;
