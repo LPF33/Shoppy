@@ -1,7 +1,7 @@
 <template>
-  <div v-if="error" class="error">{{ errorMessage }}</div>
   <form @submit.prevent="submit">
     <h1>Login</h1>
+    <div v-if="error" class="error">{{ errorMessage }}</div>
     <input
       type="email"
       required
@@ -77,5 +77,11 @@ input {
   padding: 10px;
   border-radius: 30px;
   margin: 20px 10%;
+}
+.error {
+  background-color: red;
+  text-align: center;
+  font-size: 1.5rem;
+  padding: 10px;
 }
 </style>

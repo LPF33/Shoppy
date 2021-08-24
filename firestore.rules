@@ -11,5 +11,8 @@ service cloud.firestore {
     match /cooky/{document=**} {
       allow read, write: if signedIn();
     }
+    match /budget/{document=**} {
+      allow read, write: if signedIn();
+    }
   }
 }

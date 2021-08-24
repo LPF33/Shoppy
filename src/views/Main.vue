@@ -4,26 +4,32 @@
     <div v-if="schaetzchen" v-html="greeting" class="header"></div>
     <div v-else class="emoji">🦋</div>
     <aside>{{ wedding }} Tage bis zur Hochzeit</aside>
+    <Logout v-if="showLogout" @close-logout="toggleLogout" />
     <footer>
       <router-link :to="{ name: 'Budget' }" class="buttons">💰</router-link>
       <router-link :to="{ name: 'Jambo' }" class="buttons">🎲</router-link>
-      <button @click="userLogout" class="buttons">🔒</button>
+      <button @click="toggleLogout" class="buttons">🔒</button>
     </footer>
   </section>
 </template>
 
 <script>
+import Logout from "@/components/Logout.vue";
+
 export default {
   name: "Main",
+  components: {
+    Logout,
+  },
   data() {
     return {
       publicPath: process.env.BASE_URL,
+      showLogout: false,
     };
   },
   methods: {
-    userLogout() {
-      this.$store.commit("unsubscribeFirebase");
-      this.$store.commit("logout");
+    toggleLogout() {
+      this.showLogout = !this.showLogout;
     },
   },
   computed: {
