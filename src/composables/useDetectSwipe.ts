@@ -1,14 +1,16 @@
-import { onMounted, onBeforeUnmount, reactive, computed } from "vue";
+import { onMounted, onBeforeUnmount, reactive, computed, Ref } from "vue";
 
-const DirectionConst = {
-  UP: "UP",
-  DOWN: "DOWN",
-  RIGHT: "RIGHT",
-  LEFT: "LEFT",
-  NONE: "NONE",
-};
+export enum DIRECTION {
+  UP = "swipe Up",
+  DOWN = "swipe DOWN",
+  RIGHT = "swipe RIGHT",
+  LEFT = "swipe LEFT",
+  NONE = "no DIRECTION",
+}
 
-export default function useDetectSwipe(domElement) {
+export default function useDetectSwipe(
+  domElement: Ref<HTMLTableElement | null>
+) {
   const touchStartCoord = reactive({ x: 0, y: 0 });
   const touchEndCoord = reactive({ x: 0, y: 0 });
 
@@ -21,16 +23,16 @@ export default function useDetectSwipe(domElement) {
 
   const swipeDirection = computed(() => {
     if (!distanceExceeded.value) {
-      return DirectionConst.NONE;
+      return DIRECTION.NONE;
     }
     if (Math.abs(diffX.value) > Math.abs(diffY.value)) {
-      return diffX.value < 0 ? DirectionConst.RIGHT : DirectionConst.LEFT;
+      return diffX.value < 0 ? DIRECTION.RIGHT : DIRECTION.LEFT;
     } else {
-      return diffY.value < 0 ? DirectionConst.DOWN : DirectionConst.UP;
+      return diffY.value < 0 ? DIRECTION.DOWN : DIRECTION.UP;
     }
   });
 
-  const updateCoords = (coord, x, y) => {
+  const updateCoords = (coord: "start" | "end", x: number, y: number) => {
     switch (coord) {
       case "start":
         touchStartCoord.x = x;
@@ -43,11 +45,11 @@ export default function useDetectSwipe(domElement) {
     }
   };
 
-  const listenerOptions = detectingPassiveEventSupport
+  const listenerOptions = detectingPassiveEventSupport()
     ? { passive: true }
     : { capture: false };
 
-  const touchStartListener = (e) => {
+  const touchStartListener = (e: TouchEvent) => {
     if (!listenerOptions.passive) {
       e.preventDefault();
     }
@@ -57,14 +59,14 @@ export default function useDetectSwipe(domElement) {
     updateCoords("end", x, y);
   };
 
-  const touchEndListener = (e) => {
+  const touchEndListener = (e: TouchEvent) => {
     const x = e.changedTouches[0].clientX;
     const y = e.changedTouches[0].clientY;
     updateCoords("end", x, y);
   };
 
   onMounted(() => {
-    if (!domElement?.value) {
+    if (!domElement.value) {
       return;
     }
     domElement.value.addEventListener(
@@ -81,7 +83,7 @@ export default function useDetectSwipe(domElement) {
   });
 
   onBeforeUnmount(() => {
-    if (!domElement?.value) {
+    if (!domElement.value) {
       return;
     }
     domElement.value.removeEventListener(
@@ -114,8 +116,8 @@ function detectingPassiveEventSupport() {
       },
     };
 
-    window.addEventListener("test", null, options);
-    window.removeEventListener("test", null, options);
+    window.addEventListener("click", () => null, options);
+    window.removeEventListener("click", () => null);
   } catch (err) {
     passiveSupported = false;
   }

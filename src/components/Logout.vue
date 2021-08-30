@@ -10,18 +10,21 @@
 </template>
 
 <script>
-export default {
+import { defineComponent } from "vue";
+import { MutationTypes } from "@/Types/Store";
+
+export default defineComponent({
   name: "Logout",
   methods: {
     userLogout() {
-      this.$store.commit("unsubscribeFirebase");
-      this.$store.commit("logout");
+      this.$store.commit(MutationTypes.UNSUBSCRIBE_FIREBASE);
+      this.$store.commit(MutationTypes.LOGOUT);
     },
     closeLogout() {
       this.$emit("close-logout");
     },
   },
-};
+});
 </script>
 
 <style scoped>

@@ -3,7 +3,7 @@ import Main from "../views/Main.vue";
 import Shoppy from "../views/Shoppy.vue";
 import Jambo from "../views/Jambo.vue";
 import Cooky from "../views/Cooky.vue";
-import store from "@/store";
+import store from "@/store/index";
 
 const routes = [
   {
@@ -62,20 +62,14 @@ router.beforeEach((to, from, next) => {
       return;
     }
     next("/login");
-  } else {
-    next();
-  }
-});
-
-router.beforeEach((to, from, next) => {
-  if (to.matched.some((record) => record.meta.guest)) {
+  } else if (to.matched.some((record) => record.meta.guest)) {
     if (store.state.isAuthenticated) {
       next("/");
       return;
     }
     next();
   } else {
-    next();
+    next("/");
   }
 });
 

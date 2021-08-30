@@ -166,7 +166,7 @@ h1 {
   height: 1.5em;
 }
 
-section > div:first-child {
+section > div {
   position: absolute;
   top: calc(2rem + 20px);
   bottom: 8rem;

@@ -28,13 +28,21 @@
   </table>
 </template>
 
-<script>
-import { computed, reactive, toRefs, watch } from "vue";
+<script lang="ts">
+import {
+  computed,
+  reactive,
+  toRefs,
+  watch,
+  defineComponent,
+  PropType,
+} from "vue";
+import { IExpenses } from "@/Types/Budget";
 
-export default {
+export default defineComponent({
   name: "CurrentExpenses",
   props: {
-    currentExpenses: { type: Array },
+    currentExpenses: { type: Array as PropType<IExpenses[]>, required: true },
   },
   setup(props) {
     console.log(props);
@@ -56,7 +64,7 @@ export default {
 
     const difference = reactive({ caroline: "", lars: "" });
 
-    function personAmount(name) {
+    function personAmount(name: "Lars" | "Caroline") {
       return props.currentExpenses.reduce((acc, cur) => {
         if (cur.name === name) {
           return acc + cur.amount;
@@ -83,7 +91,7 @@ export default {
 
     return { ...toRefs(expensesFixedObj), difference };
   },
-};
+});
 </script>
 
 <style scoped></style>

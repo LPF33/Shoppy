@@ -7,8 +7,10 @@
   <div v-if="error" class="error-nav">❗</div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from "vue";
+
+export default defineComponent({
   name: "Navbar",
   computed: {
     isLoggedIn: function () {
@@ -18,7 +20,7 @@ export default {
       return this.$store.state.error;
     },
   },
-};
+});
 </script>
 
 <style>

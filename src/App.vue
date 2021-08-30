@@ -5,19 +5,20 @@
   <Navbar />
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from "vue";
+import { ActionTypes, MutationTypes } from "@/Types/Store";
 import Navbar from "@/components/Navbar.vue";
 
-export default {
+export default defineComponent({
   components: { Navbar },
   mounted() {
-    this.$store.dispatch("checkAuth");
+    this.$store.dispatch(ActionTypes.CHECK_AUTH);
   },
   unmounted() {
-    // safe is safe ...
-    this.$store.commit("unsubscribeFirebase");
+    this.$store.commit(MutationTypes.UNSUBSCRIBE_FIREBASE);
   },
-};
+});
 </script>
 
 <style>
