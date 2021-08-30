@@ -10,10 +10,11 @@
   </form>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent, PropType } from "vue";
 import { shoppyFirestore } from "@/firebase/config";
 
-export default {
+export default defineComponent({
   name: "AddItem",
   props: {
     index: {
@@ -21,7 +22,7 @@ export default {
       default: 1,
     },
     selected: {
-      type: String,
+      type: String as PropType<"Supermarkt" | "Drogerie">,
       required: true,
       default: "Supermarkt",
     },
@@ -55,11 +56,11 @@ export default {
     },
   },
   watch: {
-    index(id) {
+    index(id: number) {
       this.item.list_id = id;
     },
   },
-};
+});
 </script>
 
 <style scoped>

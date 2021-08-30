@@ -8,14 +8,16 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent, PropType } from "vue";
+import { MutationTypes, ISupermarktItem, IDrogerieItem } from "@/Types/Store";
 import { shoppyFirestore } from "@/firebase/config";
 
-export default {
+export default defineComponent({
   name: "ShoppingItem",
   props: {
     item: {
-      type: Object,
+      type: Object as PropType<ISupermarktItem | IDrogerieItem>,
       required: true,
     },
   },
@@ -24,7 +26,7 @@ export default {
       try {
         await shoppyFirestore.collection("shoppy").doc(this.item.key).delete();
       } catch (error) {
-        this.$store.commit("setError", error);
+        this.$store.commit(MutationTypes.SET_ERROR, error);
       }
     },
     async selectedItem() {
@@ -34,11 +36,11 @@ export default {
           .doc(this.item.key)
           .update({ done: !this.item.done });
       } catch (error) {
-        this.$store.commit("setError", error);
+        this.$store.commit(MutationTypes.SET_ERROR, error);
       }
     },
   },
-};
+});
 </script>
 
 <style scoped>

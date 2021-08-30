@@ -14,8 +14,11 @@
   </form>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from "vue";
+import { ActionTypes } from "@/Types/Store";
+
+export default defineComponent({
   name: "Login",
   data() {
     return {
@@ -25,7 +28,7 @@ export default {
   },
   methods: {
     submit() {
-      this.$store.dispatch("signIn", {
+      this.$store.dispatch(ActionTypes.SIGN_IN, {
         email: this.email,
         password: this.password,
       });
@@ -42,7 +45,7 @@ export default {
   mounted() {
     this.$refs.input.focus();
   },
-};
+});
 </script>
 
 <style scoped>

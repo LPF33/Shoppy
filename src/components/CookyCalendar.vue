@@ -30,7 +30,7 @@
 
 <script>
 import { ref, watch } from "vue";
-import useDetectSwipe from "@/composables/useDetectSwipe.js";
+import useDetectSwipe from "@/composables/useDetectSwipe";
 
 export default {
   name: "CookyCalendar",
@@ -45,7 +45,7 @@ export default {
   },
   setup() {
     const tableDom = ref(null);
-    const { swipeDirection } = useDetectSwipe(tableDom);
+    const { swipeDirection } = useDetectSwipe(tableDom.value);
     const today = ref(new Date());
     const options = { month: "long", year: "numeric" };
     const month = ref(today.value.toLocaleString("de-DE", options));

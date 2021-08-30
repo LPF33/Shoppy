@@ -11,8 +11,10 @@
   </section>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from "vue";
+
+export default defineComponent({
   name: "Jambo",
   data() {
     return {
@@ -32,11 +34,11 @@ export default {
     },
   },
   computed: {
-    visual() {
+    visual(): any[] | null {
       return this.counter > 0 ? new Array(this.counter) : null;
     },
   },
-};
+});
 </script>
 
 <style scoped>
@@ -48,6 +50,7 @@ section {
   align-items: center;
   text-align: center;
   background-color: #ffeda3;
+  user-select: none;
 }
 
 h1,

@@ -8,7 +8,7 @@ const DirectionConst = {
   NONE: "NONE",
 };
 
-export default function useDetectSwipe(domElement) {
+export default function useDetectSwipe(domElement: HTMLTableElement) {
   const touchStartCoord = reactive({ x: 0, y: 0 });
   const touchEndCoord = reactive({ x: 0, y: 0 });
 
@@ -30,7 +30,7 @@ export default function useDetectSwipe(domElement) {
     }
   });
 
-  const updateCoords = (coord, x, y) => {
+  const updateCoords = (coord: "start" | "end", x: number, y: number) => {
     switch (coord) {
       case "start":
         touchStartCoord.x = x;
@@ -43,11 +43,11 @@ export default function useDetectSwipe(domElement) {
     }
   };
 
-  const listenerOptions = detectingPassiveEventSupport
+  const listenerOptions = detectingPassiveEventSupport()
     ? { passive: true }
     : { capture: false };
 
-  const touchStartListener = (e) => {
+  const touchStartListener = (e: TouchEvent) => {
     if (!listenerOptions.passive) {
       e.preventDefault();
     }
@@ -57,40 +57,36 @@ export default function useDetectSwipe(domElement) {
     updateCoords("end", x, y);
   };
 
-  const touchEndListener = (e) => {
+  const touchEndListener = (e: TouchEvent) => {
     const x = e.changedTouches[0].clientX;
     const y = e.changedTouches[0].clientY;
     updateCoords("end", x, y);
   };
 
   onMounted(() => {
-    if (!domElement?.value) {
+    if (!domElement) {
       return;
     }
-    domElement.value.addEventListener(
+    domElement.addEventListener(
       "touchstart",
       touchStartListener,
       listenerOptions
     );
 
-    domElement.value.addEventListener(
-      "touchend",
-      touchEndListener,
-      listenerOptions
-    );
+    domElement.addEventListener("touchend", touchEndListener, listenerOptions);
   });
 
   onBeforeUnmount(() => {
-    if (!domElement?.value) {
+    if (!domElement) {
       return;
     }
-    domElement.value.removeEventListener(
+    domElement.removeEventListener(
       "touchstart",
       touchStartListener,
       listenerOptions
     );
 
-    domElement.value.removeEventListener(
+    domElement.removeEventListener(
       "touchend",
       touchEndListener,
       listenerOptions
@@ -114,8 +110,8 @@ function detectingPassiveEventSupport() {
       },
     };
 
-    window.addEventListener("test", null, options);
-    window.removeEventListener("test", null, options);
+    window.addEventListener("touchstart", () => null, options);
+    window.removeEventListener("touchstart", () => null);
   } catch (err) {
     passiveSupported = false;
   }

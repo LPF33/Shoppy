@@ -3,7 +3,8 @@
     <img :src="`${publicPath}img/wedding.JPG`" alt="wedding-photo" />
     <div v-if="schaetzchen" v-html="greeting" class="header"></div>
     <div v-else class="emoji">🦋</div>
-    <aside>{{ wedding }} Tage bis zur Hochzeit</aside>
+    <aside v-if="wedding > 0">{{ wedding }} Tage bis zur Hochzeit</aside>
+    <aside v-else>Just married!</aside>
     <Logout v-if="showLogout" @close-logout="toggleLogout" />
     <footer>
       <router-link :to="{ name: 'Budget' }" class="buttons">💰</router-link>
@@ -13,10 +14,11 @@
   </section>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from "vue";
 import Logout from "@/components/Logout.vue";
 
-export default {
+export default defineComponent({
   name: "Main",
   components: {
     Logout,
@@ -33,7 +35,7 @@ export default {
     },
   },
   computed: {
-    wedding() {
+    wedding(): number {
       const weddingDate = new Date(2021, 8, 7);
       const now = new Date();
       return (
@@ -42,10 +44,10 @@ export default {
         ) + 1
       );
     },
-    schaetzchen() {
+    schaetzchen(): boolean {
       return this.$store.state.user !== "lars@gmail.com";
     },
-    greeting() {
+    greeting(): string {
       const now = new Date();
       const hours = now.getHours();
       if (5 <= hours && hours <= 11) {
@@ -61,7 +63,7 @@ export default {
       }
     },
   },
-};
+});
 </script>
 
 <style scoped>
