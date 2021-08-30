@@ -15,35 +15,39 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import {
+  defineComponent,
+  reactive,
+  toRefs,
+  computed,
+  ref,
+  onMounted,
+} from "vue";
+import { useStore } from "vuex";
 import { ActionTypes } from "@/Types/Store";
 
 export default defineComponent({
   name: "Login",
-  data() {
-    return {
-      email: "",
-      password: "",
-    };
-  },
-  methods: {
-    submit() {
-      this.$store.dispatch(ActionTypes.SIGN_IN, {
-        email: this.email,
-        password: this.password,
+  setup() {
+    const data = reactive({ email: "", password: "" });
+    const store = useStore();
+    const input = ref<HTMLInputElement | null>(null);
+
+    function submit() {
+      store.dispatch(ActionTypes.SIGN_IN, {
+        email: data.email,
+        password: data.password,
       });
-    },
-  },
-  computed: {
-    error() {
-      return this.$store.state.error;
-    },
-    errorMessage() {
-      return this.$store.state.errorMessage;
-    },
-  },
-  mounted() {
-    this.$refs.input.focus();
+    }
+
+    const error = computed(() => store.state.error);
+    const errorMessage = computed(() => store.state.errorMessage);
+
+    onMounted(() => {
+      input.value?.focus();
+    });
+
+    return { ...toRefs(data), submit, error, errorMessage, input };
   },
 });
 </script>
