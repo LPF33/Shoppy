@@ -12,47 +12,56 @@
   </section>
 </template>
 
-<script>
+<script lang="ts">
+import {
+  computed,
+  defineComponent,
+  onBeforeMount,
+  reactive,
+  toRefs,
+} from "vue";
 import AddExpense from "@/components/AddExpense.vue";
 import CurrentExpenses from "@/components/CurrentExpenses.vue";
 import { shoppyFirestore } from "@/firebase/config";
+import { IBudgetData, IExpenses } from "@/Types/Budget";
 
-export default {
+export default defineComponent({
   name: "Budget",
   components: {
     AddExpense,
     CurrentExpenses,
   },
-  data() {
-    return {
+  emit: ["click"],
+  setup() {
+    const state: IBudgetData = reactive({
       showAddExpense: false,
       expenses: [],
       unsubscribeExpenses: null,
-    };
-  },
-  methods: {
-    toggleExpense() {
-      this.showAddExpense = !this.showAddExpense;
-    },
-  },
-  computed: {
-    filterOpenExpenses() {
-      return this.expenses.filter((item) => !item.closed);
-    },
-  },
-  mounted() {
-    this.unsubscribeExpenses = shoppyFirestore
+    });
+
+    const filterOpenExpenses = computed(() =>
+      state.expenses.filter((item) => !item.closed)
+    );
+
+    function toggleExpense() {
+      state.showAddExpense = !state.showAddExpense;
+    }
+
+    state.unsubscribeExpenses = shoppyFirestore
       .collection("budget")
       .onSnapshot((doc) => {
-        this.expenses = doc.docs.map((item) => item.data());
+        state.expenses = doc.docs.map((item) => item.data()) as IExpenses[];
       });
+
+    onBeforeMount(() => {
+      if (typeof state.unsubscribeExpenses === "function") {
+        state.unsubscribeExpenses();
+      }
+    });
+
+    return { ...toRefs(state), filterOpenExpenses, toggleExpense };
   },
-  beforeUnmount() {
-    if (typeof this.unsubscribeExpenses === "function") {
-      this.unsubscribeExpenses();
-    }
-  },
-};
+});
 </script>
 
 <style scoped>

@@ -78,7 +78,7 @@ export default createStore({
           .collection("shoppy")
           .onSnapshot(
             (doc) => {
-              let newDoc = doc.docs
+              const newDoc = doc.docs
                 .map((item) => item.data())
                 .sort((a, b) => a.list_id - b.list_id);
               state.supermarktItems = newDoc.filter(

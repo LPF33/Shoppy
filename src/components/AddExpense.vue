@@ -9,55 +9,67 @@
     </select>
     <label for="category">Kategorie ?</label>
     <select v-model="category">
-      <option value="Supermarkt">Supermarkt</option>
-      <option value="Drogerie">Drogerie</option>
-      <option value="Versicherung">Versicherung</option>
-      <option value="Rundfunk">Rundfunk</option>
-      <option value="Bofrost">Bofrost</option>
-      <option value="Urlaub">Urlaub</option>
-      <option value="Amazon">Amazon</option>
+      <option v-for="item in categories" :value="item" :key="item">
+        {{ item }}
+      </option>
     </select>
     <button>💲</button>
   </form>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent, reactive, toRefs, ref } from "vue";
 import { shoppyFirestore } from "@/firebase/config";
+import { IExpenses, CategoryTuple } from "@/Types/Budget";
 
-export default {
+export default defineComponent({
   name: "AddExpense",
-  data() {
-    return {
-      amount: null,
+  emit: ["submit", "click", "close-add-expense"],
+  setup() {
+    const amount = ref("");
+    const categories: CategoryTuple = [
+      "Supermarkt",
+      "Drogerie",
+      "Versicherung",
+      "Rundfunk",
+      "Bofrost",
+      "Urlaub",
+      "Amazon",
+    ];
+    const state: Omit<IExpenses, "created_at" | "amount"> = reactive({
       name: "Caroline",
       category: "Supermarkt",
       closed: false,
-    };
-  },
-  methods: {
-    async addExpense() {
-      let { amount, name, category, closed } = this;
-      amount = amount.replace(",", ".");
-      amount = parseFloat(amount);
-      if (Number.isNaN(amount) || amount <= 0) {
-        this.amount = "";
+    });
+
+    async function addExpense() {
+      let { name, category, closed } = state;
+      let str = amount.value;
+      str = str.replace(",", ".");
+      let num = parseFloat(str);
+      if (Number.isNaN(num) || num <= 0) {
+        amount.value = "";
         return;
       }
-      const item = {
-        amount: parseInt(amount * 100),
+      const item: IExpenses = {
+        amount: Math.floor(num * 100),
         name,
         category,
         created_at: new Date(),
         closed,
       };
       await shoppyFirestore.collection("budget").add(item);
-      this.amount = "";
-    },
+      amount.value = "";
+    }
+
+    return { amount, categories, ...toRefs(state), addExpense };
+  },
+  methods: {
     close() {
       this.$emit("close-add-expense");
     },
   },
-};
+});
 </script>
 
 <style scoped>
