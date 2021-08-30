@@ -17,80 +17,75 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent, onMounted, PropType, reactive, toRefs } from "vue";
+import { useStore } from "vuex";
+import { dateFormat } from "@/utilities/calendarFunctions";
+import { IComputedMealList, ICookyAddMealData, INewMeal } from "@/Types/Cooky";
+import { IStoreState, MutationTypes } from "@/Types/Store";
 import { shoppyFirestore } from "@/firebase/config";
 
-export default {
+export default defineComponent({
   name: "CookyAddMeal",
   props: {
     dataObject: {
-      type: [Object, null],
+      type: Object as PropType<IComputedMealList | INewMeal>,
+      required: true,
     },
   },
-  data() {
-    return {
+  setup(props, context) {
+    const data = reactive<ICookyAddMealData>({
       today: new Date(),
       startDate: null,
       endDate: null,
       meal: "",
       existingKey: false,
-    };
-  },
-  watch: {
-    dataObject: {
-      deep: true,
-      handler(dataObj) {
-        this.meal = "";
-        this.existingKey = false;
+    });
 
-        if ("key" in dataObj) {
-          this.startDate = dataObj.startDate;
-          this.existingKey = dataObj.key;
-          this.meal = dataObj.meal || "";
-          this.endDate = dataObj.endDate;
-          return;
-        }
+    const store = useStore<IStoreState>();
 
-        this.startDate = this.dateFormat(
-          dataObj.startDate.getFullYear(),
-          dataObj.startDate.getMonth(),
-          dataObj.startNum
-        );
+    onMounted(function handler() {
+      const newValue = props.dataObject;
 
-        this.autoNextDay();
-      },
-      startDate() {
-        this.autoNextDay();
-      },
-    },
-  },
-  methods: {
-    dateFormat(year, month, day) {
-      return `${year}-${this.padTime(++month)}-${this.padTime(day)}`;
-    },
-    autoNextDay() {
-      let nextDay = new Date(this.startDate);
+      if ("key" in newValue) {
+        data.startDate = newValue.startDate;
+        data.existingKey = newValue.key!;
+        data.meal = newValue.meal || "";
+        data.endDate = newValue.endDate;
+        return;
+      }
+
+      data.startDate = dateFormat(
+        newValue.startDate.getFullYear(),
+        newValue.startDate.getMonth(),
+        newValue.startNum
+      );
+
+      autoNextDay();
+    });
+
+    function autoNextDay() {
+      let nextDay = new Date(data.startDate!);
       nextDay.setDate(nextDay.getDate() + 1);
-      this.endDate = this.dateFormat(
+      data.endDate = dateFormat(
         nextDay.getFullYear(),
         nextDay.getMonth(),
         nextDay.getDate()
       );
-    },
-    padTime(val, len = 2) {
-      return val.toString().padStart(len, "0");
-    },
-    closeModal() {
-      this.$emit("close");
-    },
-    async addNewMeal() {
+    }
+
+    function closeModal() {
+      context.emit("close");
+    }
+
+    async function addNewMeal() {
       try {
         // insert new data
-        if (this.meal && !this.existingKey) {
+        if (data.meal && !data.existingKey) {
           const ref = await shoppyFirestore.collection("cooky").add({
-            meal: this.meal,
-            startDate: this.startDate,
-            endDate: this.endDate,
+            meal: data.meal,
+            startDate: data.startDate,
+            endDate: data.endDate,
           });
           await shoppyFirestore.collection("cooky").doc(ref.id).set(
             {
@@ -98,36 +93,42 @@ export default {
             },
             { merge: true }
           );
-        } else {
+        } else if (data.existingKey && typeof data.existingKey === "string") {
           // or do update existing data
           await shoppyFirestore
             .collection("cooky")
-            .doc(this.existingKey)
+            .doc(data.existingKey)
             .update({
-              meal: this.meal,
-              startDate: this.startDate,
-              endDate: this.endDate,
+              meal: data.meal,
+              startDate: data.startDate,
+              endDate: data.endDate,
             });
-          this.$emit("close");
+          context.emit("close");
         }
-        this.meal = "";
+        data.meal = "";
       } catch (error) {
-        this.$store.commit("setError", error);
+        store.commit(MutationTypes.SET_ERROR, error.message);
       }
-    },
-    async deleteMeal() {
+    }
+
+    async function deleteMeal() {
+      if (!data.existingKey || typeof data.existingKey !== "string") {
+        return;
+      }
       try {
         await shoppyFirestore
           .collection("cooky")
-          .doc(this.existingKey)
+          .doc(data.existingKey)
           .delete();
-        this.$emit("close");
+        context.emit("close");
       } catch (error) {
-        this.$store.commit("setError", error);
+        store.commit(MutationTypes.SET_ERROR, error.message);
       }
-    },
+    }
+
+    return { ...toRefs(data), closeModal, addNewMeal, deleteMeal };
   },
-};
+});
 </script>
 
 <style scoped>

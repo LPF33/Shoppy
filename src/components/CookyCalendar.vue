@@ -1,10 +1,10 @@
 <template>
   <table ref="tableDom">
     <caption>
-      <button @click="switchMonth('LEFT')">&lt;</button>
+      <button @click="switchMonth(DIRECTION.LEFT)">&lt;</button>
       {{
         month
-      }}<button @click="switchMonth('RIGHT')">&gt;</button>
+      }}<button @click="switchMonth(DIRECTION.RIGHT)">&gt;</button>
     </caption>
     <thead>
       <tr>
@@ -12,12 +12,12 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(week, index) in getDaysOfMonth" :key="index">
+      <tr v-for="(week, index) in daysOfMonth" :key="index">
         <td
           v-for="(day, index2) in week"
           :key="index2"
           @click="setMeal(day)"
-          :class="{ active: checkDay(day) }"
+          :class="{ active: checkDay(day, today) }"
           :style="{ backgroundColor: setCookyCalendar(day, true) }"
         >
           <p>{{ day }}</p>
@@ -28,147 +28,123 @@
   </table>
 </template>
 
-<script>
-import { ref, watch } from "vue";
-import useDetectSwipe from "@/composables/useDetectSwipe";
+<script lang="ts">
+import {
+  ref,
+  watch,
+  defineComponent,
+  PropType,
+  reactive,
+  computed,
+  toRefs,
+} from "vue";
+import useDetectSwipe, { DIRECTION } from "@/composables/useDetectSwipe";
+import getDaysOfMonth from "@/utilities/getDaysOfMonth";
+import { checkMonth, checkDay } from "@/utilities/calendarFunctions";
+import { IComputedMealList, INewMeal } from "@/Types/Cooky";
 
-export default {
+export default defineComponent({
   name: "CookyCalendar",
   props: {
-    meals: [Array, null],
+    meals: {
+      type: Object as PropType<null | Required<IComputedMealList[]>>,
+    },
   },
-  data() {
-    return {
+  setup(props, context) {
+    const data = reactive({
       weekday: ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"],
-      mealList: this.meals,
-    };
-  },
-  setup() {
-    const tableDom = ref(null);
-    const { swipeDirection } = useDetectSwipe(tableDom.value);
-    const today = ref(new Date());
-    const options = { month: "long", year: "numeric" };
-    const month = ref(today.value.toLocaleString("de-DE", options));
+      today: new Date(),
+    });
+
+    const month = computed(() =>
+      data.today.toLocaleString("de-DE", { month: "long", year: "numeric" })
+    );
+
+    const daysOfMonth = computed(() => getDaysOfMonth(data.today));
+
+    const tableDom = ref<HTMLTableElement | null>(null);
+    const { swipeDirection } = useDetectSwipe(tableDom);
 
     watch(swipeDirection, function (newVal) {
       switchMonth(newVal);
     });
 
-    function switchMonth(para) {
+    function switchMonth(para: DIRECTION) {
       let now;
       switch (para) {
-        case "RIGHT":
-          if (today.value.getMonth() === 11) {
-            now = new Date(today.value.getFullYear() + 1, 0);
+        case DIRECTION.RIGHT:
+          if (data.today.getMonth() === 11) {
+            now = new Date(data.today.getFullYear() + 1, 0);
             break;
           }
-          now = new Date(today.value.getFullYear(), today.value.getMonth() + 1);
+          now = new Date(data.today.getFullYear(), data.today.getMonth() + 1);
           break;
-        case "LEFT":
-          if (today.value.getMonth() === 0) {
-            now = new Date(today.value.getFullYear() - 1, 11);
+        case DIRECTION.LEFT:
+          if (data.today.getMonth() === 0) {
+            now = new Date(data.today.getFullYear() - 1, 11);
             break;
           }
-          now = new Date(today.value.getFullYear(), today.value.getMonth() - 1);
+          now = new Date(data.today.getFullYear(), data.today.getMonth() - 1);
           break;
         default:
           return;
       }
-      today.value = now;
-      month.value = now.toLocaleString("de-DE", {
-        month: "long",
-        year: "numeric",
-      });
+      data.today = now;
     }
 
-    return { tableDom, switchMonth, month, today, swipeDirection };
-  },
-  computed: {
-    getDaysOfMonth() {
-      const monthArr = [];
-      monthArr.push(new Array(7).fill(""));
-      let currentDay = new Date(
-        this.today.getFullYear(),
-        this.today.getMonth()
-      );
-      let counterWeekArray =
-        currentDay.getDay() === 0 ? 6 : currentDay.getDay() - 1;
-      let counterWeeksArray = 0;
-      while (currentDay.getMonth() === this.today.getMonth()) {
-        monthArr[counterWeeksArray][counterWeekArray] = currentDay.getDate();
-        currentDay.setDate(currentDay.getDate() + 1);
-        // if next day is a monday and not next month
-        if (
-          currentDay.getDay() === 1 &&
-          currentDay.getMonth() === this.today.getMonth()
-        ) {
-          counterWeekArray = 0;
-          counterWeeksArray++;
-          monthArr.push(new Array(7).fill(""));
-        } else {
-          counterWeekArray++;
+    const setCookyCalendar = computed(
+      () =>
+        (day: number, color: boolean = false) => {
+          if (!props.meals) {
+            return "";
+          }
+          const foundMeal = props.meals.find(
+            (item) =>
+              (item.startNum === day &&
+                checkMonth(item.startDate, data.today)) ||
+              (item.endNum === day && checkMonth(item.endDate, data.today))
+          );
+          return color ? foundMeal?.color : foundMeal?.meal || "";
         }
+    );
+
+    function setMeal(day: number | "") {
+      if (day === "") {
+        return;
       }
-      return monthArr;
-    },
-    setCookyCalendar() {
-      return (day, color = false) => {
-        if (!this.mealList) {
-          return "";
-        }
-        const foundMeal = this.mealList.find(
-          (item) =>
-            (item.startNum === day && this.checkMonth(item.startDate)) ||
-            (item.endNum === day && this.checkMonth(item.endDate))
-        );
-        return color ? foundMeal?.color : foundMeal?.meal || "";
-      };
-    },
-  },
-  watch: {
-    meals: {
-      deep: true,
-      handler(newMeals) {
-        this.mealList = newMeals;
-      },
-    },
-  },
-  methods: {
-    setMeal(day) {
-      const meal = this.mealList.find(
+      const meal = props.meals?.find(
         (item) =>
-          (item.startNum === day && this.checkMonth(item.startDate)) ||
-          (item.endNum === day && this.checkMonth(item.endDate))
+          (item.startNum === day && checkMonth(item.startDate, data.today)) ||
+          (item.endNum === day && checkMonth(item.endDate, data.today))
       );
-      this.$emit(
+      context.emit(
         "open-modal",
-        meal ?? {
-          startNum: day,
-          startDate: new Date(
-            this.today.getFullYear(),
-            this.today.getMonth(),
-            day
-          ),
-        }
+        meal ??
+          ({
+            startNum: day,
+            startDate: new Date(
+              data.today.getFullYear(),
+              data.today.getMonth(),
+              day
+            ),
+          } as INewMeal)
       );
-    },
-    checkMonth(date) {
-      date = new Date(date);
-      return date.getMonth() === this.today.getMonth();
-    },
-    checkDay(day) {
-      const currentDate = new Date();
-      if (
-        currentDate.getFullYear() === this.today.getFullYear() &&
-        currentDate.getMonth() === this.today.getMonth() &&
-        currentDate.getDate() === day
-      ) {
-        return true;
-      }
-      return false;
-    },
+    }
+
+    return {
+      ...toRefs(data),
+      tableDom,
+      DIRECTION,
+      daysOfMonth,
+      switchMonth,
+      month,
+      swipeDirection,
+      setCookyCalendar,
+      setMeal,
+      checkDay,
+    };
   },
-};
+});
 </script>
 
 <style scoped>

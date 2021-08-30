@@ -8,7 +8,7 @@
       @open-modal="openCookyAddMeal"
     />
     <CookyAddMeal
-      v-show="modalVisible"
+      v-if="modalVisible"
       @click.self="modalVisible = false"
       @close="modalVisible = false"
       :data-object="mealData"
@@ -16,44 +16,50 @@
   </section>
 </template>
 
-<script>
+<script lang="ts">
+import { computed, defineComponent, reactive, toRefs } from "vue";
+import { useStore } from "vuex";
+import { getDateOfMonth } from "@/utilities/calendarFunctions";
+import { IMeal, IComputedMealList, INewMeal } from "@/Types/Cooky";
+import { IStoreState } from "@/Types/Store";
 import CookyCalendar from "@/components/CookyCalendar.vue";
 import CookyAddMeal from "@/components/CookyAddMeal.vue";
 
-export default {
+export default defineComponent({
   name: "Cooky",
   components: {
     CookyCalendar,
     CookyAddMeal,
   },
-  data() {
-    return {
+  setup() {
+    const data = reactive({
       modalVisible: false,
-      mealData: null,
-    };
+      mealData: null as null | IMeal | INewMeal,
+    });
+
+    const store = useStore<IStoreState>();
+
+    const mealList = computed((): Required<IComputedMealList[]> | null => {
+      return store.state.mealList?.length && store.state.mealList.length > 0
+        ? store.state.mealList.map((item) => {
+            const copy: IComputedMealList = { ...item };
+            const randomNum = Math.floor(Math.random() * (361 - 200) + 200);
+            copy.color = `hsl(${randomNum}, 80%, 70%)`;
+            copy.startNum = getDateOfMonth(copy.startDate as string);
+            copy.endNum = getDateOfMonth(copy.endDate as string);
+            return copy;
+          })
+        : null;
+    });
+
+    function openCookyAddMeal(meal: IMeal | INewMeal) {
+      data.mealData = meal;
+      data.modalVisible = true;
+    }
+
+    return { ...toRefs(data), openCookyAddMeal, mealList };
   },
-  methods: {
-    getMealDay(date) {
-      date = new Date(date);
-      return date.getDate();
-    },
-    openCookyAddMeal(meal) {
-      this.mealData = meal;
-      this.modalVisible = true;
-    },
-  },
-  computed: {
-    mealList() {
-      return this.$store.state.mealList.map((item) => {
-        const randomNum = Math.floor(Math.random() * (361 - 200) + 200);
-        item.color = `hsl(${randomNum}, 80%, 70%)`;
-        item.startNum = this.getMealDay(item.startDate);
-        item.endNum = this.getMealDay(item.endDate);
-        return item;
-      });
-    },
-  },
-};
+});
 </script>
 
 <style scoped>
