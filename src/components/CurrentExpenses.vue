@@ -1,5 +1,5 @@
 <template>
-  <table>
+  <table id="current-expenses">
     <caption>
       Insgesamt:
       {{
@@ -14,29 +14,26 @@
     </thead>
     <tbody>
       <tr>
-        <th>{{ amountCaroline }}€</th>
-        <th>{{ amountLars }}€</th>
+        <td>{{ amountCaroline }}€</td>
+        <td>{{ amountLars }}€</td>
       </tr>
-      <tr>
-        <th>{{ difference.caroline }}</th>
-        <th>{{ difference.lars }}</th>
+      <tr class="difference">
+        <td>{{ difference.caroline }}</td>
+        <td>{{ difference.lars }}</td>
       </tr>
     </tbody>
     <tfoot>
-      <button>Abschließen ?</button>
+      <tr>
+        <td colspan="2">
+          <button>{{ month }} abschließen ?</button>
+        </td>
+      </tr>
     </tfoot>
   </table>
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  reactive,
-  toRefs,
-  watch,
-  defineComponent,
-  PropType,
-} from "vue";
+import { computed, reactive, defineComponent, PropType, watch, ref } from "vue";
 import { IExpenses } from "@/Types/Budget";
 
 export default defineComponent({
@@ -45,53 +42,91 @@ export default defineComponent({
     currentExpenses: { type: Array as PropType<IExpenses[]>, required: true },
   },
   setup(props) {
-    console.log(props);
-    const expensesObj = reactive({
-      total: computed(() =>
-        props.currentExpenses.reduce((acc, cur) => acc + cur.amount, 0)
-      ),
-      amountCaroline: computed(() => personAmount("Caroline")),
-      amountLars: computed(() => personAmount("Lars")),
-    });
-
-    const expensesFixedObj = reactive({
-      total: computed(() => (expensesObj.total / 100).toFixed(2)),
-      amountCaroline: computed(() =>
-        (expensesObj.amountCaroline / 100).toFixed(2)
-      ),
-      amountLars: computed(() => (expensesObj.amountLars / 100).toFixed(2)),
-    });
-
+    const total = computed((): string =>
+      (
+        props.currentExpenses.reduce((acc, cur) => acc + cur.amount, 0) / 100
+      ).toFixed(2)
+    );
+    const amountCaroline = computed((): string => personAmount("Caroline"));
+    const amountLars = computed((): string => personAmount("Lars"));
     const difference = reactive({ caroline: "", lars: "" });
-
-    function personAmount(name: "Lars" | "Caroline") {
-      return props.currentExpenses.reduce((acc, cur) => {
-        if (cur.name === name) {
-          return acc + cur.amount;
-        }
-        return acc;
-      }, 0);
-    }
+    const date = new Date();
+    const month = ref(date.toLocaleString("de-DE", { month: "long" }));
 
     watch(
-      expensesObj,
-      () => {
-        const half = expensesObj.total / 2;
-        const carolineHigherExpenses =
-          expensesObj.amountCaroline > expensesObj.amountLars;
-        difference.caroline = carolineHigherExpenses
-          ? ""
-          : ((half - expensesObj.amountCaroline) / 100).toFixed(2) + "€";
-        difference.lars = carolineHigherExpenses
-          ? ((half - expensesObj.amountLars) / 100).toFixed(2) + "€"
-          : "";
+      () => props.currentExpenses,
+      (newValue) => {
+        const half = newValue.reduce((acc, cur) => acc + cur.amount, 0) / 200;
+        difference.caroline =
+          +amountCaroline.value > +amountLars.value
+            ? ""
+            : (half - +amountCaroline.value).toFixed(2) + "€";
+        difference.lars =
+          +amountCaroline.value > +amountLars.value
+            ? (half - +amountLars.value).toFixed(2) + "€"
+            : "";
       },
       { immediate: true }
     );
 
-    return { ...toRefs(expensesFixedObj), difference };
+    function personAmount(name: "Lars" | "Caroline"): string {
+      return (
+        props.currentExpenses.reduce((acc, cur) => {
+          if (cur.name === name) {
+            return acc + cur.amount;
+          }
+          return acc;
+        }, 0) / 100
+      ).toFixed(2);
+    }
+
+    return { total, amountCaroline, amountLars, difference, month };
   },
 });
 </script>
 
-<style scoped></style>
+<style>
+#current-expenses {
+  border-collapse: collapse;
+  width: 300px;
+  max-width: 100vw;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#current-expenses caption {
+  font-size: 1.5rem;
+  margin-top: 10px;
+  background-color: rgb(255, 255, 255);
+  padding: 10px;
+  border-radius: 10px 10px 0 0;
+  color: rgb(0, 0, 0);
+}
+
+#current-expenses th {
+  width: calc(100% / 2);
+  padding: 10px;
+  background-color: rgb(248, 124, 87);
+  color: rgb(153, 55, 55);
+  font-weight: bold;
+}
+
+#current-expenses td {
+  width: calc(100% / 2);
+  padding: 10px;
+  background-color: white;
+  color: black;
+}
+
+#current-expenses tr.difference > td {
+  color: rgb(248, 124, 87);
+  font-weight: bold;
+}
+
+#current-expenses tfoot button {
+  font-weight: 1rem;
+  padding: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+</style>

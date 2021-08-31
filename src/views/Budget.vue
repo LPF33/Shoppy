@@ -16,7 +16,7 @@
 import {
   computed,
   defineComponent,
-  onBeforeMount,
+  onBeforeUnmount,
   reactive,
   toRefs,
 } from "vue";
@@ -47,13 +47,15 @@ export default defineComponent({
       state.showAddExpense = !state.showAddExpense;
     }
 
-    state.unsubscribeExpenses = shoppyFirestore
-      .collection("budget")
-      .onSnapshot((doc) => {
-        state.expenses = doc.docs.map((item) => item.data()) as IExpenses[];
-      });
+    (() => {
+      state.unsubscribeExpenses = shoppyFirestore
+        .collection("budget")
+        .onSnapshot((doc) => {
+          state.expenses = doc.docs.map((item) => item.data()) as IExpenses[];
+        });
+    })();
 
-    onBeforeMount(() => {
+    onBeforeUnmount(() => {
       if (typeof state.unsubscribeExpenses === "function") {
         state.unsubscribeExpenses();
       }
@@ -79,6 +81,7 @@ section {
   text-align: center;
   user-select: none;
 }
+
 footer {
   position: absolute;
   bottom: 10px;
