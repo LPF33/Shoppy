@@ -35,12 +35,13 @@ nav {
 nav a {
   font-weight: bold;
   color: #2c3e50;
-  border: 2px solid rgb(184, 184, 184);
+  border-radius: 10px;
   padding: 10px;
   width: 150px;
   text-align: center;
   margin: 0 10px;
   color: #ffeda3;
+  background-color: rgba(184, 184, 184, 0.3);
   text-decoration: none;
 }
 
