@@ -1,10 +1,19 @@
 <template>
   <section>
     <h1>Budget</h1>
-    <AddExpense v-if="showAddExpense" @close-add-expense="toggleExpense" />
+    <AddExpense
+      v-if="showAddExpense"
+      @close-add-expense="toggleExpense"
+      :min-month="minOpenMonth"
+    />
     <CurrentExpenses
-      v-if="filterOpenExpenses.length > 0"
-      :current-expenses="filterOpenExpenses"
+      v-if="openExpenses.length > 0"
+      :current-expenses="openExpenses"
+      :min-month="minOpenMonth"
+    />
+    <MonthlyExpenses
+      v-if="monthlyExpenses.length > 0"
+      :monthly-expenses="monthlyExpenses"
     />
     <footer>
       <button @click="toggleExpense">➕</button>
@@ -20,16 +29,20 @@ import {
   reactive,
   toRefs,
 } from "vue";
-import AddExpense from "@/components/AddExpense.vue";
-import CurrentExpenses from "@/components/CurrentExpenses.vue";
+import AddExpense from "@/components/Budget/AddExpense.vue";
+import CurrentExpenses from "@/components/Budget/CurrentExpenses.vue";
+import MonthlyExpenses from "@/components/Budget/MonthlyExpenses.vue";
 import { shoppyFirestore } from "@/firebase/config";
-import { IBudgetData, IExpenses } from "@/Types/Budget";
+import { IBudgetData, IExpenses, IMonthlyExpenses } from "@/Types/Budget";
+import { useStore } from "vuex";
+import { IStoreState, MutationTypes } from "@/Types/Store";
 
 export default defineComponent({
   name: "Budget",
   components: {
     AddExpense,
     CurrentExpenses,
+    MonthlyExpenses,
   },
   emit: ["click"],
   setup() {
@@ -39,20 +52,40 @@ export default defineComponent({
       unsubscribeExpenses: null,
     });
 
-    const filterOpenExpenses = computed(() =>
-      state.expenses.filter((item) => !item.closed)
+    const store = useStore<IStoreState>();
+
+    const openExpenses = computed(
+      () => state.expenses.filter((item) => !item.closed) as IExpenses[]
     );
+
+    const monthlyExpenses = computed(
+      () => state.expenses.filter((item) => item.closed) as IMonthlyExpenses[]
+    );
+
+    const minOpenMonth = computed(() => {
+      if (!openExpenses.value.length) {
+        return null;
+      }
+      const minMonthVal = openExpenses.value.reduce((acc, cur) =>
+        acc.monthNum < cur.monthNum ? acc : cur
+      );
+      return minMonthVal.month;
+    });
 
     function toggleExpense() {
       state.showAddExpense = !state.showAddExpense;
     }
 
     (() => {
-      state.unsubscribeExpenses = shoppyFirestore
-        .collection("budget")
-        .onSnapshot((doc) => {
-          state.expenses = doc.docs.map((item) => item.data()) as IExpenses[];
-        });
+      try {
+        state.unsubscribeExpenses = shoppyFirestore
+          .collection("budget")
+          .onSnapshot((doc) => {
+            state.expenses = doc.docs.map((item) => item.data()) as IExpenses[];
+          });
+      } catch (error) {
+        store.commit(MutationTypes.SET_ERROR, error.message);
+      }
     })();
 
     onBeforeUnmount(() => {
@@ -61,7 +94,13 @@ export default defineComponent({
       }
     });
 
-    return { ...toRefs(state), filterOpenExpenses, toggleExpense };
+    return {
+      ...toRefs(state),
+      openExpenses,
+      monthlyExpenses,
+      minOpenMonth,
+      toggleExpense,
+    };
   },
 });
 </script>

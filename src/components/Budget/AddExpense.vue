@@ -13,6 +13,12 @@
         {{ item }}
       </option>
     </select>
+    <label for="month">Monat ?</label>
+    <select v-model="month">
+      <option v-for="m in monthTuple" :value="m" :key="m">
+        {{ m }}
+      </option>
+    </select>
     <button>💲</button>
   </form>
 </template>
@@ -20,12 +26,15 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs, ref } from "vue";
 import { shoppyFirestore } from "@/firebase/config";
-import { IExpenses, CategoryTuple } from "@/Types/Budget";
+import { IExpenses, CategoryTuple, EMonth, TMonth } from "@/Types/Budget";
+import { useStore } from "vuex";
+import { IStoreState, MutationTypes } from "@/Types/Store";
 
 export default defineComponent({
   name: "AddExpense",
   emit: ["submit", "click", "close-add-expense"],
   setup() {
+    const store = useStore<IStoreState>();
     const amount = ref("");
     const categories: CategoryTuple = [
       "Supermarkt",
@@ -36,14 +45,20 @@ export default defineComponent({
       "Urlaub",
       "Amazon",
     ];
-    const state: Omit<IExpenses, "created_at" | "amount"> = reactive({
-      name: "Caroline",
-      category: "Supermarkt",
-      closed: false,
-    });
+    const monthTuple = Object.keys(EMonth).filter((item) =>
+      Number.isNaN(+item)
+    ) as TMonth[];
+    const date = new Date();
+    const state: Omit<IExpenses, "amount" | "year" | "monthNum" | "key"> =
+      reactive({
+        name: "Caroline",
+        category: "Supermarkt",
+        month: monthTuple[date.getMonth()],
+        closed: false,
+      });
 
     async function addExpense() {
-      let { name, category, closed } = state;
+      let { name, category, closed, month } = state;
       let str = amount.value;
       str = str.replace(",", ".");
       let num = parseFloat(str);
@@ -51,18 +66,31 @@ export default defineComponent({
         amount.value = "";
         return;
       }
-      const item: IExpenses = {
+      const item: Omit<IExpenses, "key"> = {
         amount: Math.floor(num * 100),
         name,
         category,
-        created_at: new Date(),
+        month,
+        monthNum: EMonth[month],
+        year: date.getFullYear(),
         closed,
       };
-      await shoppyFirestore.collection("budget").add(item);
+      try {
+        const ref = await shoppyFirestore.collection("budget").add(item);
+        await shoppyFirestore.collection("budget").doc(ref.id).set(
+          {
+            key: ref.id,
+          },
+          { merge: true }
+        );
+      } catch (error) {
+        store.commit(MutationTypes.SET_ERROR, error.message);
+      }
+
       amount.value = "";
     }
 
-    return { amount, categories, ...toRefs(state), addExpense };
+    return { amount, categories, ...toRefs(state), addExpense, monthTuple };
   },
   methods: {
     close() {
@@ -84,8 +112,13 @@ form {
   flex-direction: column;
   border-radius: 10px;
   padding: 20px;
-  background-color: #2940d3;
+  background-color: rgb(248, 124, 87);
   z-index: 100;
+}
+
+label {
+  color: rgb(153, 55, 55);
+  font-weight: bold;
 }
 
 input,
@@ -96,7 +129,6 @@ select {
   color: "slategrey";
   height: 45px;
   text-align: center;
-  background-color: #ffeda3;
   border-radius: 10px;
 }
 

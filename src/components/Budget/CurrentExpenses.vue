@@ -25,7 +25,11 @@
     <tfoot>
       <tr>
         <td colspan="2">
-          <button>{{ month }} abschließen ?</button>
+          <CloseMonth
+            v-if="minMonth"
+            :min-month="minMonth"
+            :min-month-expenses="minMonthExpenses"
+          />
         </td>
       </tr>
     </tfoot>
@@ -33,14 +37,20 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive, defineComponent, PropType, watch, ref } from "vue";
-import { IExpenses } from "@/Types/Budget";
+import { computed, reactive, defineComponent, PropType, watch } from "vue";
+import { IExpenses, TMonth } from "@/Types/Budget";
+import CloseMonth from "@/components/Budget/CloseMonth.vue";
 
 export default defineComponent({
   name: "CurrentExpenses",
+  components: {
+    CloseMonth,
+  },
   props: {
     currentExpenses: { type: Array as PropType<IExpenses[]>, required: true },
+    minMonth: { type: String as PropType<TMonth | undefined> },
   },
+  emit: ["click"],
   setup(props) {
     const total = computed((): string =>
       (
@@ -49,9 +59,10 @@ export default defineComponent({
     );
     const amountCaroline = computed((): string => personAmount("Caroline"));
     const amountLars = computed((): string => personAmount("Lars"));
+    const minMonthExpenses = computed((): IExpenses[] =>
+      props.currentExpenses.filter((item) => item.month === props.minMonth)
+    );
     const difference = reactive({ caroline: "", lars: "" });
-    const date = new Date();
-    const month = ref(date.toLocaleString("de-DE", { month: "long" }));
 
     watch(
       () => props.currentExpenses,
@@ -80,7 +91,7 @@ export default defineComponent({
       ).toFixed(2);
     }
 
-    return { total, amountCaroline, amountLars, difference, month };
+    return { total, amountCaroline, amountLars, difference, minMonthExpenses };
   },
 });
 </script>
@@ -128,5 +139,6 @@ export default defineComponent({
   padding: 10px;
   font-weight: bold;
   cursor: pointer;
+  background-color: transparent;
 }
 </style>
