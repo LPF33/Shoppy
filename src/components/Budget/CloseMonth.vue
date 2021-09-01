@@ -1,9 +1,17 @@
 <template>
-  <button @click="closeMonth">{{ minMonth }} abschließen 📆</button>
+  <button @click="toggleModal = !toggleModal" v-if="!toggleModal">
+    {{ minMonth }} abschließen 📆
+  </button>
+  <div v-else>
+    <button @click="closeMonth" class="modal-buttons">✔</button>
+    <button @click="toggleModal = !toggleModal" class="modal-buttons">
+      ❌
+    </button>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { defineComponent, PropType, ref } from "vue";
 import { IMonthlyExpenses, IExpenses, TMonth } from "@/Types/Budget";
 import { shoppyFirestore } from "@/firebase/config";
 import { useStore } from "vuex";
@@ -16,6 +24,8 @@ export default defineComponent({
     minMonthExpenses: { type: Array as PropType<IExpenses[]>, required: true },
   },
   setup(props) {
+    const toggleModal = ref(false);
+
     async function closeMonth() {
       const store = useStore<IStoreState>();
       const date = new Date();
@@ -43,9 +53,19 @@ export default defineComponent({
       }
     }
 
-    return { closeMonth };
+    return { closeMonth, toggleModal };
   },
 });
 </script>
 
-<style></style>
+<style>
+.modal-buttons {
+  background-color: transparent;
+  font-size: 3rem;
+  padding: 10px;
+  cursor: pointer;
+  user-select: none;
+  text-decoration: none;
+  margin: 20px;
+}
+</style>

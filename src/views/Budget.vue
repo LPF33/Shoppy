@@ -11,10 +11,12 @@
       :current-expenses="openExpenses"
       :min-month="minOpenMonth"
     />
-    <MonthlyExpenses
-      v-if="monthlyExpenses.length > 0"
-      :monthly-expenses="monthlyExpenses"
-    />
+    <div id="monthly-expenses">
+      <MonthlyExpenses
+        v-if="monthlyExpenses.length > 0"
+        :monthly-expenses="monthlyExpenses"
+      />
+    </div>
     <footer>
       <button @click="toggleExpense">➕</button>
     </footer>
