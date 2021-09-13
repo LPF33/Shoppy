@@ -177,10 +177,12 @@ section > div {
 
 .section-draggable {
   display: flex;
+  overflow: hidden;
 }
 
 .section-draggable > div:nth-child(2) {
   flex-grow: 1;
+  overflow-x: auto;
 }
 
 .draggable-next {

@@ -49,12 +49,15 @@ export default defineComponent({
   width: 100%;
   border-bottom: 1px solid grey;
   user-select: none;
+  overflow: hidden;
 }
 
 .shopping-item > div {
   display: flex;
   flex-grow: 1;
   cursor: pointer;
+  white-space: nowrap;
+  overflow-x: auto;
 }
 
 .shopping-item > div.done {
