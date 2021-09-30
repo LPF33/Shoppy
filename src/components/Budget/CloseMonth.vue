@@ -28,7 +28,6 @@ export default defineComponent({
 
     async function closeMonth() {
       const store = useStore<IStoreState>();
-      const date = new Date();
       const monthlyExpenses: IMonthlyExpenses = {
         Supermarkt: 0,
         Drogerie: 0,
@@ -38,7 +37,7 @@ export default defineComponent({
         Urlaub: 0,
         Amazon: 0,
         month: props.minMonth,
-        year: date.getFullYear(),
+        year: Date.now(),
         closed: true,
       };
       try {

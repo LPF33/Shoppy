@@ -1,21 +1,23 @@
 <template>
   <section>
     <h1>Budget</h1>
-    <AddExpense
-      v-if="showAddExpense"
-      @close-add-expense="toggleExpense"
-      :min-month="minOpenMonth"
-    />
-    <CurrentExpenses
-      v-if="openExpenses.length > 0"
-      :current-expenses="openExpenses"
-      :min-month="minOpenMonth"
-    />
-    <div id="monthly-expenses">
-      <MonthlyExpenses
-        v-if="monthlyExpenses.length > 0"
-        :monthly-expenses="monthlyExpenses"
+    <div>
+      <AddExpense
+        v-if="showAddExpense"
+        @close-add-expense="toggleExpense"
+        :min-month="minOpenMonth"
       />
+      <CurrentExpenses
+        v-if="openExpenses.length > 0"
+        :current-expenses="openExpenses"
+        :min-month="minOpenMonth"
+      />
+      <div id="monthly-expenses">
+        <ExpensesChart
+          v-if="monthlyExpenses.length > 0"
+          :monthly-expenses="monthlyExpenses"
+        />
+      </div>
     </div>
     <footer>
       <button @click="toggleExpense">➕</button>
@@ -33,7 +35,7 @@ import {
 } from "vue";
 import AddExpense from "@/components/Budget/AddExpense.vue";
 import CurrentExpenses from "@/components/Budget/CurrentExpenses.vue";
-import MonthlyExpenses from "@/components/Budget/MonthlyExpenses.vue";
+import ExpensesChart from "@/components/Budget/ExpensesChart.vue";
 import { shoppyFirestore } from "@/firebase/config";
 import { IBudgetData, IExpenses, IMonthlyExpenses } from "@/Types/Budget";
 import { useStore } from "vuex";
@@ -44,7 +46,7 @@ export default defineComponent({
   components: {
     AddExpense,
     CurrentExpenses,
-    MonthlyExpenses,
+    ExpensesChart,
   },
   emit: ["click"],
   setup() {
@@ -121,6 +123,18 @@ section {
   align-items: center;
   text-align: center;
   user-select: none;
+}
+
+section > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: calc(2rem + 20px);
+  bottom: 8rem;
+  max-width: 500px;
+  width: 90vw;
+  overflow-y: auto;
 }
 
 footer {
