@@ -1,12 +1,24 @@
 <template>
   <section>
-    <img :src="`${publicPath}img/kukulcan.jpg`" alt="wedding-photo" />
+    <img
+      class="main-img"
+      :src="
+        special(2022, 6, 15) >= 0
+          ? `${publicPath}img/cuddly_bears.gif`
+          : `${publicPath}img/kukulcan.jpg`
+      "
+      alt="wedding-photo"
+    />
     <aside>
-      <div v-if="schaetzchen" v-html="greeting"></div>
-      <div v-else><span class="emoji">🦋</span></div>
-      <h3 v-if="special > 0">
-        In <span class="highlight">{{ special }}</span> Tagen fliegen wir nach
-        Mexiko
+      <div v-if="schaetzchen" v-html="greeting()"></div>
+      <div v-else><span class="emoji main-emoji">🦋</span></div>
+      <h3 v-if="special(2022, 6, 15) >= 0">
+        In <span class="highlight">{{ special(2022, 6, 15) }}</span> Tagen
+        {{ schaetzchen ? "kommst du wieder zurück" : "kommt Caroline zurück" }}
+      </h3>
+      <h3 v-if="special(2022, 6, 19) > 0">
+        In <span class="highlight">{{ special(2022, 6, 19) }}</span> Tagen
+        fliegen wir nach Mexiko
       </h3>
       <h3 v-else>Mexiko! Wir kommen! <span class="emoji">🇲🇽</span></h3>
     </aside>
@@ -24,31 +36,33 @@ export default defineComponent({
     };
   },
   computed: {
-    special(): number {
-      const specialDate = new Date(2022, 6, 19);
+    schaetzchen(): boolean {
+      return this.$store.state.user !== "lars@gmail.com";
+    },
+  },
+  methods: {
+    special(year: number, month: number, day: number): number {
       const now = new Date();
+      const specialDate = new Date(year, month, day);
       return (
         Math.floor(
           (specialDate.getTime() - now.getTime()) / (1000 * 3600 * 24)
         ) + 1
       );
     },
-    schaetzchen(): boolean {
-      return this.$store.state.user !== "lars@gmail.com";
-    },
     greeting(): string {
       const now = new Date();
       const hours = now.getHours();
       if (5 <= hours && hours <= 11) {
-        return '<span class="emoji">🌞</span><h2>Guten Morgen</h2><h3>Schönen Tag, meine Kleine 🦋</h3>';
+        return '<span class="emoji main-emoji">🌞</span><h2>Guten Morgen</h2><h3>Schönen Tag, meine Kleine 🦋</h3>';
       } else if (11 < hours && hours <= 14) {
-        return '<span class="emoji">🌼</span><h2>Schönen Mittag</h2>';
+        return '<span class="emoji main-emoji">🌼</span><h2>Schönen Mittag</h2>';
       } else if (14 < hours && hours <= 17) {
-        return '<span class="emoji">☕</span><h2>Schönen Nachmittag</h2>';
+        return '<span class="emoji main-emoji">☕</span><h2>Schönen Nachmittag</h2>';
       } else if (17 < hours && hours <= 22) {
-        return '<span class="emoji">🌜</span><h2>Schönen Abend,</h2><h3>mein kleines Schätzchen 🥰</h3>';
+        return '<span class="emoji main-emoji">🌜</span><h2>Schönen Abend,</h2><h3>mein kleines Schätzchen 🥰</h3>';
       } else {
-        return '<span class="emoji">😴</span><h2>Schlaf schön!</h2><h3> Gute Nacht, meine Kleine ♥️</h3>';
+        return '<span class="emoji main-emoji">😴</span><h2>Schlaf schön!</h2><h3> Gute Nacht, meine Kleine ♥️</h3>';
       }
     },
   },
@@ -66,15 +80,20 @@ section {
   align-items: center;
 }
 
-img {
+div + h3,
+h3 + h3 {
+  margin-top: 10px;
+}
+
+.main-img {
   max-width: 100%;
-  height: 50%;
+  height: 60%;
   padding: 30px;
   object-fit: contain;
 }
 
 aside {
-  height: 50%;
+  height: 41%;
   width: 100%;
   background-color: #232323;
   color: rgb(255, 255, 255);

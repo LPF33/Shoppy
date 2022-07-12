@@ -45,4 +45,10 @@ span.emoji {
   font-size: 2.5rem;
   vertical-align: middle;
 }
+
+.main-emoji {
+  position: absolute;
+  top: 60%;
+  transform: translateY(-50%);
+}
 </style>
