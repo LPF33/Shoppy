@@ -1,17 +1,18 @@
 <template>
-  <div id="logout-modal">
+  <section>
     <h2>Logout</h2>
     <h2>Wirklich ausloggen?</h2>
     <div>
       <button @click="userLogout" class="buttons">✔</button>
       <button @click="closeLogout" class="buttons">❌</button>
     </div>
-  </div>
+  </section>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from "vue";
 import { MutationTypes } from "@/Types/Store";
+import router from "@/router";
 
 export default defineComponent({
   name: "Logout",
@@ -21,25 +22,20 @@ export default defineComponent({
       this.$store.commit(MutationTypes.LOGOUT);
     },
     closeLogout() {
-      this.$emit("close-logout");
+      router.push("/");
     },
   },
 });
 </script>
 
 <style scoped>
-#logout-modal {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 100vw;
-  padding: 20px;
+section {
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  border-radius: 10px;
   background-color: #232323;
   color: white;
 }

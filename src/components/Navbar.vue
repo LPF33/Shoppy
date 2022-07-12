@@ -1,8 +1,25 @@
 <template>
   <nav v-if="isLoggedIn">
-    <router-link :to="{ name: 'Main' }">Main</router-link>
-    <router-link :to="{ name: 'Shoppy' }">Shoppy</router-link>
-    <router-link :to="{ name: 'Cooky' }">Cooky</router-link>
+    <router-link :to="{ name: 'Main' }"
+      ><span>🏠</span>
+      <p>Home</p>
+    </router-link>
+    <router-link :to="{ name: 'Shoppy' }">
+      <span>🛒</span>
+      <p>Shoppy</p>
+    </router-link>
+    <router-link :to="{ name: 'Cooky' }">
+      <span>🧑‍🍳</span>
+      <p>Cooky</p>
+    </router-link>
+    <router-link :to="{ name: 'Jambo' }" class="buttons">
+      <span>🎲</span>
+      <p>Jambo</p>
+    </router-link>
+    <router-link :to="{ name: 'Logout' }" class="buttons">
+      <span>🔒</span>
+      <p>Logout</p>
+    </router-link>
   </nav>
   <div v-if="error" class="error-nav">❗</div>
 </template>
@@ -26,27 +43,41 @@ export default defineComponent({
 <style>
 nav {
   width: 100%;
-  padding: 10px;
+  height: 90px;
   display: flex;
   justify-content: center;
   background: #232323;
 }
 
 nav a {
-  font-weight: bold;
-  color: #2c3e50;
-  border-radius: 10px;
-  padding: 10px;
-  width: 150px;
   text-align: center;
-  margin: 0 10px;
-  color: #ffeda3;
-  background-color: rgba(184, 184, 184, 0.3);
+  width: 150px;
   text-decoration: none;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-nav a.router-link-exact-active {
-  color: #39a9cb;
+nav a > span {
+  margin: 5px;
+  padding: 5px;
+  font-size: 1.7rem;
+  border-radius: 15px;
+  background-color: rgba(184, 184, 184, 0.3);
+}
+
+nav a.router-link-exact-active > span {
+  background-color: #ffeda3;
+}
+
+nav a > p {
+  font-size: 0.8rem;
+  color: #686868;
+}
+
+nav a.router-link-exact-active > p {
+  color: #ffeda3;
 }
 
 .error-nav {

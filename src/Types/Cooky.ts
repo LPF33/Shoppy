@@ -29,3 +29,8 @@ export interface ICookyAddMealData {
   meal: string;
   existingKey: false | string;
 }
+
+export interface ICookyCalendarData {
+  weekday: ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
+  today: Date;
+}

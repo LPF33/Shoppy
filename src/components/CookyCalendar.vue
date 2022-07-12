@@ -60,7 +60,7 @@ export default defineComponent({
       data.today.toLocaleString("de-DE", { month: "long", year: "numeric" })
     );
 
-    const daysOfMonth = computed(() => getDaysOfMonth(data.today));
+    const daysOfMonth = computed(() => getDaysOfMonth(data.today as Date));
 
     const tableDom = ref<HTMLTableElement | null>(null);
     const { swipeDirection } = useDetectSwipe(tableDom);
@@ -101,8 +101,8 @@ export default defineComponent({
           const foundMeal = props.meals.find(
             (item) =>
               (item.startNum === day &&
-                checkMonth(item.startDate, data.today)) ||
-              (item.endNum === day && checkMonth(item.endDate, data.today))
+                checkMonth(item.startDate, data.today as Date)) ||
+              (item.endNum === day && checkMonth(item.endDate, data.today as Date))
           );
           return color ? foundMeal?.color : foundMeal?.meal || "";
         }
@@ -114,8 +114,8 @@ export default defineComponent({
       }
       const meal = props.meals?.find(
         (item) =>
-          (item.startNum === day && checkMonth(item.startDate, data.today)) ||
-          (item.endNum === day && checkMonth(item.endDate, data.today))
+          (item.startNum === day && checkMonth(item.startDate, data.today as Date)) ||
+          (item.endNum === day && checkMonth(item.endDate, data.today as Date))
       );
       context.emit(
         "open-modal",

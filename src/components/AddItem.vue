@@ -13,6 +13,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 import { shoppyFirestore } from "@/firebase/config";
+import { collection, addDoc, setDoc } from "firebase/firestore";
 
 export default defineComponent({
   name: "AddItem",
@@ -41,13 +42,11 @@ export default defineComponent({
   methods: {
     async addNewItem() {
       if (this.item?.name) {
-        const ref = await shoppyFirestore.collection("shoppy").add(this.item);
-        await shoppyFirestore.collection("shoppy").doc(ref.id).set(
-          {
-            key: ref.id,
-          },
-          { merge: true }
+        const ref = await addDoc(
+          collection(shoppyFirestore, "shoppy"),
+          this.item
         );
+        await setDoc(ref, { key: ref.id }, { merge: true });
         this.item.name = this.item.value = "";
       }
     },

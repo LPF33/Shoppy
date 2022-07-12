@@ -24,6 +24,14 @@ import { dateFormat } from "@/utilities/calendarFunctions";
 import { IComputedMealList, ICookyAddMealData, INewMeal } from "@/Types/Cooky";
 import { IStoreState, MutationTypes } from "@/Types/Store";
 import { shoppyFirestore } from "@/firebase/config";
+import {
+  collection,
+  doc,
+  addDoc,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
 
 export default defineComponent({
   name: "CookyAddMeal",
@@ -82,27 +90,19 @@ export default defineComponent({
       try {
         // insert new data
         if (data.meal && !data.existingKey) {
-          const ref = await shoppyFirestore.collection("cooky").add({
+          const ref = await addDoc(collection(shoppyFirestore, "cooky"), {
             meal: data.meal,
             startDate: data.startDate,
             endDate: data.endDate,
           });
-          await shoppyFirestore.collection("cooky").doc(ref.id).set(
-            {
-              key: ref.id,
-            },
-            { merge: true }
-          );
+          await setDoc(ref, { key: ref.id }, { merge: true });
         } else if (data.existingKey && typeof data.existingKey === "string") {
           // or do update existing data
-          await shoppyFirestore
-            .collection("cooky")
-            .doc(data.existingKey)
-            .update({
-              meal: data.meal,
-              startDate: data.startDate,
-              endDate: data.endDate,
-            });
+          await updateDoc(doc(shoppyFirestore, "cooky", data.existingKey), {
+            meal: data.meal,
+            startDate: data.startDate,
+            endDate: data.endDate,
+          });
           context.emit("close");
         }
         data.meal = "";
@@ -116,10 +116,7 @@ export default defineComponent({
         return;
       }
       try {
-        await shoppyFirestore
-          .collection("cooky")
-          .doc(data.existingKey)
-          .delete();
+        await deleteDoc(doc(shoppyFirestore, "cooky", data.existingKey));
         context.emit("close");
       } catch (error) {
         store.commit(MutationTypes.SET_ERROR, error.message);

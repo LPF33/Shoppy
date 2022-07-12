@@ -7,6 +7,8 @@ import {
   ISupermarktItem,
 } from "@/Types/Store";
 import { authFirebase, shoppyFirestore } from "@/firebase/config";
+import { collection, onSnapshot } from "firebase/firestore";
+import { signOut } from "firebase/auth";
 import router from "@/router";
 
 export type Mutations<S = IStoreState> = {
@@ -32,7 +34,7 @@ const mutations: MutationTree<IStoreState> & Mutations = {
     state.drogerieItems = null;
     state.shoppyIndex = null;
     try {
-      await authFirebase.signOut();
+      await signOut(authFirebase);
     } catch (err) {
       state.error = true;
     }
@@ -52,11 +54,12 @@ const mutations: MutationTree<IStoreState> & Mutations = {
   },
   [MutationTypes.SET_MEALS_FIREBASE](state) {
     try {
-      state.unsubscribeCooky = shoppyFirestore
-        .collection("cooky")
-        .onSnapshot((doc) => {
+      state.unsubscribeCooky = onSnapshot(
+        collection(shoppyFirestore, "cooky"),
+        (doc) => {
           state.mealList = doc.docs.map((item) => item.data()) as IMealList[];
-        });
+        }
+      );
     } catch (err) {
       state.error = true;
       state.errorMessage = err;
@@ -64,7 +67,8 @@ const mutations: MutationTree<IStoreState> & Mutations = {
   },
   [MutationTypes.SET_SHOPPY_FIREBASE](state) {
     try {
-      state.unsubscribeShoppy = shoppyFirestore.collection("shoppy").onSnapshot(
+      state.unsubscribeShoppy = onSnapshot(
+        collection(shoppyFirestore, "shoppy"),
         (doc) => {
           const newDoc = doc.docs
             .map((item) => item.data())

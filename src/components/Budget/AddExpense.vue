@@ -26,6 +26,7 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs, ref } from "vue";
 import { shoppyFirestore } from "@/firebase/config";
+import { collection, addDoc, setDoc } from "firebase/firestore";
 import { IExpenses, CategoryTuple, EMonth, TMonth } from "@/Types/Budget";
 import { useStore } from "vuex";
 import { IStoreState, MutationTypes } from "@/Types/Store";
@@ -76,13 +77,8 @@ export default defineComponent({
         closed,
       };
       try {
-        const ref = await shoppyFirestore.collection("budget").add(item);
-        await shoppyFirestore.collection("budget").doc(ref.id).set(
-          {
-            key: ref.id,
-          },
-          { merge: true }
-        );
+        const ref = await addDoc(collection(shoppyFirestore, "budget"), item);
+        await setDoc(ref, { key: ref.id }, { merge: true });
       } catch (error) {
         store.commit(MutationTypes.SET_ERROR, error.message);
       }

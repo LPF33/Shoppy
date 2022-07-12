@@ -1,7 +1,12 @@
 import { ActionTree, ActionContext } from "vuex";
 import { IStoreState, MutationTypes, ActionTypes } from "@/Types/Store";
 import { Mutations } from "@/store/mutations";
-import firebase from "firebase/app";
+import {
+  setPersistence,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  browserLocalPersistence,
+} from "firebase/auth";
 import { authFirebase } from "@/firebase/config";
 
 type AugmentedActionContext = {
@@ -21,8 +26,8 @@ export interface Actions {
 const actions: ActionTree<IStoreState, IStoreState> = {
   async [ActionTypes.SIGN_IN]({ commit }, { email, password }) {
     try {
-      await authFirebase.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-      await authFirebase.signInWithEmailAndPassword(email, password);
+      await setPersistence(authFirebase, browserLocalPersistence);
+      await signInWithEmailAndPassword(authFirebase, email, password);
       commit(MutationTypes.SET_LOGIN);
     } catch (err) {
       commit(MutationTypes.SET_ERROR, "Authentication failed");
@@ -30,7 +35,7 @@ const actions: ActionTree<IStoreState, IStoreState> = {
   },
   [ActionTypes.CHECK_AUTH]({ commit, state }) {
     try {
-      authFirebase.onAuthStateChanged((user) => {
+      onAuthStateChanged(authFirebase, (user) => {
         if (user) {
           state.user = user.email;
           commit(MutationTypes.SET_LOGIN);

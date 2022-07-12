@@ -12,6 +12,7 @@
 import { defineComponent, PropType } from "vue";
 import { MutationTypes, ISupermarktItem, IDrogerieItem } from "@/Types/Store";
 import { shoppyFirestore } from "@/firebase/config";
+import { doc, deleteDoc, updateDoc } from "firebase/firestore";
 
 export default defineComponent({
   name: "ShoppingItem",
@@ -24,17 +25,16 @@ export default defineComponent({
   methods: {
     async deleteItem() {
       try {
-        await shoppyFirestore.collection("shoppy").doc(this.item.key).delete();
+        await deleteDoc(doc(shoppyFirestore, "shoppy", this.item.key));
       } catch (error) {
         this.$store.commit(MutationTypes.SET_ERROR, error);
       }
     },
     async selectedItem() {
       try {
-        await shoppyFirestore
-          .collection("shoppy")
-          .doc(this.item.key)
-          .update({ done: !this.item.done });
+        await updateDoc(doc(shoppyFirestore, "shoppy", this.item.key), {
+          done: !this.item.done,
+        });
       } catch (error) {
         this.$store.commit(MutationTypes.SET_ERROR, error);
       }

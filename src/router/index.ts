@@ -37,6 +37,15 @@ const routes = [
     component: () => import("../views/Budget.vue"),
   },
   {
+    path: "/logout",
+    name: "Logout",
+    meta: { requiresAuth: true },
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import("../views/Logout.vue"),
+  },
+  {
     path: "/cooky",
     name: "Cooky",
     meta: { requiresAuth: true },

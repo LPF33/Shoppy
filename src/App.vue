@@ -40,4 +40,9 @@ export default defineComponent({
 main {
   flex-grow: 1;
 }
+
+span.emoji {
+  font-size: 2.5rem;
+  vertical-align: middle;
+}
 </style>

@@ -37,6 +37,7 @@ import AddExpense from "@/components/Budget/AddExpense.vue";
 import CurrentExpenses from "@/components/Budget/CurrentExpenses.vue";
 import ExpensesChart from "@/components/Budget/ExpensesChart.vue";
 import { shoppyFirestore } from "@/firebase/config";
+import { collection, onSnapshot } from "firebase/firestore";
 import { IBudgetData, IExpenses, IMonthlyExpenses } from "@/Types/Budget";
 import { useStore } from "vuex";
 import { IStoreState, MutationTypes } from "@/Types/Store";
@@ -82,11 +83,12 @@ export default defineComponent({
 
     (() => {
       try {
-        state.unsubscribeExpenses = shoppyFirestore
-          .collection("budget")
-          .onSnapshot((doc) => {
+        state.unsubscribeExpenses = onSnapshot(
+          collection(shoppyFirestore, "budget"),
+          (doc) => {
             state.expenses = doc.docs.map((item) => item.data()) as IExpenses[];
-          });
+          }
+        );
       } catch (error) {
         store.commit(MutationTypes.SET_ERROR, error.message);
       }

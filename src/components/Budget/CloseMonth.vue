@@ -14,6 +14,7 @@
 import { defineComponent, PropType, ref } from "vue";
 import { IMonthlyExpenses, IExpenses, TMonth } from "@/Types/Budget";
 import { shoppyFirestore } from "@/firebase/config";
+import { collection, doc, addDoc, deleteDoc } from "firebase/firestore";
 import { useStore } from "vuex";
 import { IStoreState, MutationTypes } from "@/Types/Store";
 
@@ -43,10 +44,10 @@ export default defineComponent({
       try {
         for (let item of props.minMonthExpenses) {
           monthlyExpenses[item.category] += item.amount;
-          await shoppyFirestore.collection("budget").doc(item.key).delete();
+          await deleteDoc(doc(shoppyFirestore, "budget", item.key));
         }
 
-        await shoppyFirestore.collection("budget").add(monthlyExpenses);
+        await addDoc(collection(shoppyFirestore, "budget"), monthlyExpenses);
       } catch (error) {
         store.commit(MutationTypes.SET_ERROR, error.message);
       }
