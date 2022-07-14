@@ -1,9 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`Testing the Main component Main component renders as expected when Lars is logged in 1`] = `
-<main><img src="http://localhost:3000/img/wedding.JPG">
-  <div class="emoji">🦋</div>
-  <aside>36 Tage bis zur Hochzeit</aside>
-  <footer><a href="/budget" class="buttons">💰</a><a href="/jambo" class="buttons">🎲</a><button class="buttons">🔒</button></footer>
-</main>
-`;

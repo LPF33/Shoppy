@@ -1,23 +1,33 @@
 import { mount, shallowMount } from "@vue/test-utils";
 import { createRouter, createWebHistory } from "vue-router";
-import { routes } from "@/router/index.js";
-import App from "@/App";
-import Login from "@/views/Login";
-import Main from "@/views/Main";
-import Shoppy from "@/views/Shoppy";
-import Cooky from "@/views/Cooky";
-import Jambo from "@/views/Jambo";
-import Navbar from "@/components/Navbar";
+import { createStore } from "vuex";
+import { routes } from "@/router/index";
+import App from "@/App.vue";
+import Login from "@/views/Login.vue";
+import Main from "@/views/Main.vue";
+import Shoppy from "@/views/Shoppy.vue";
+import Cooky from "@/views/Cooky.vue";
+import Jambo from "@/views/Jambo.vue";
+import Logout from "@/views/Logout.vue";
+import Navbar from "@/components/Navbar.vue";
+
+let actions = {
+  checkIfUserIsAuth: jest.fn(),
+};
 
 function createSetup(authenticated = false) {
-  const $store = {
-    state: {
-      isAuthenticated: authenticated,
-    },
-    commit: jest.fn(),
-    dispatch: jest.fn(),
-    watch: jest.fn(),
+  actions = {
+    checkIfUserIsAuth: jest.fn(),
   };
+
+  const $store = createStore({
+    state() {
+      return {
+        isAuthenticated: authenticated,
+      };
+    },
+    actions,
+  });
 
   const router = createRouter({
     history: createWebHistory(),
@@ -59,13 +69,11 @@ describe("Testing the App component", () => {
 
     const wrapper = mount(App, {
       global: {
-        plugins: [router],
-        mocks: { $store },
+        plugins: [router, $store],
       },
     });
 
-    expect($store.dispatch).toHaveBeenCalledTimes(1);
-    expect($store.dispatch.mock.calls[0][0]).toBe("checkAuth");
+    expect(actions.checkIfUserIsAuth).toHaveBeenCalledTimes(1);
     expect(wrapper.findComponent(Navbar).exists()).toBeTruthy();
     expect(wrapper.vm.$route.path).toBe("/login");
     expect(wrapper.findComponent(Login).exists()).toBeTruthy();
@@ -79,12 +87,11 @@ describe("Testing the App component", () => {
 
     const wrapper = mount(App, {
       global: {
-        plugins: [router],
-        mocks: { $store },
+        plugins: [router, $store],
       },
     });
 
-    expect($store.dispatch).toHaveBeenCalledTimes(1);
+    expect(actions.checkIfUserIsAuth).toHaveBeenCalledTimes(1);
     expect(wrapper.findComponent(Navbar).exists()).toBeTruthy();
     expect(wrapper.vm.$route.path).toBe("/");
     expect(wrapper.findComponent(Main).exists()).toBeTruthy();
@@ -98,8 +105,7 @@ describe("Testing the App component", () => {
 
     const wrapper = shallowMount(App, {
       global: {
-        plugins: [router],
-        mocks: { $store },
+        plugins: [router, $store],
       },
     });
 
@@ -114,8 +120,7 @@ describe("Testing the App component", () => {
 
     const wrapper = shallowMount(App, {
       global: {
-        plugins: [router],
-        mocks: { $store },
+        plugins: [router, $store],
       },
     });
 
@@ -130,8 +135,7 @@ describe("Testing the App component", () => {
 
     const wrapper = mount(App, {
       global: {
-        plugins: [router],
-        mocks: { $store },
+        plugins: [router, $store],
         stubs: {
           Shoppy: true,
         },
@@ -149,8 +153,7 @@ describe("Testing the App component", () => {
 
     const wrapper = mount(App, {
       global: {
-        plugins: [router],
-        mocks: { $store },
+        plugins: [router, $store],
         stubs: {
           Cooky: true,
         },
@@ -168,8 +171,7 @@ describe("Testing the App component", () => {
 
     const wrapper = mount(App, {
       global: {
-        plugins: [router],
-        mocks: { $store },
+        plugins: [router, $store],
         stubs: {
           Jambo: true,
         },
@@ -178,5 +180,23 @@ describe("Testing the App component", () => {
 
     expect(wrapper.vm.$route.path).toBe("/jambo");
     expect(wrapper.findComponent(Jambo).exists()).toBeTruthy();
+  });
+
+  it("When user logged in, navigating to '/logout' will render Logout component", async () => {
+    const { router, $store } = createSetup(true);
+    router.push("/logout");
+    await router.isReady();
+
+    const wrapper = mount(App, {
+      global: {
+        plugins: [router, $store],
+        stubs: {
+          Logout: true,
+        },
+      },
+    });
+
+    expect(wrapper.vm.$route.path).toBe("/logout");
+    expect(wrapper.findComponent(Logout).exists()).toBeTruthy();
   });
 });

@@ -1,9 +1,14 @@
 import { mount, flushPromises } from "@vue/test-utils";
 import { createRouter, createWebHistory } from "vue-router";
-import { routes } from "@/router/index.js";
-import Main from "@/views/Main";
+import { routes } from "@/router/index";
+import Main from "@/views/Main.vue";
 
-let $store = {};
+let $store = {
+  state: {
+    user: "lars@gmail.com",
+  },
+  commit: jest.fn(),
+};
 
 beforeEach(() => {
   $store = {
@@ -38,29 +43,11 @@ describe("Testing the Main component", () => {
     router.push("/");
     await router.isReady();
     const wrapper = mountMain();
-    const mainWrapper = wrapper.find("main");
+    const mainWrapper = wrapper.find("section");
     expect(mainWrapper.exists()).toBeTruthy();
-    expect(mainWrapper.find("img").attributes("src")).toContain(
-      "img/wedding.JPG"
-    );
-    expect(mainWrapper.find(".header").exists()).toBeFalsy();
-    expect(mainWrapper.find(".emoji").text()).toBe("🦋");
-    expect(mainWrapper.find("aside").text()).toContain("Tage bis zur Hochzeit");
-    const footer = mainWrapper.find("footer");
-    expect(footer.exists()).toBeTruthy();
-    expect(footer.findAll("a")).toHaveLength(2);
-    expect(footer.findAll("button")).toHaveLength(1);
-  });
-
-  it("Click on Logout-Button, should call 2 $store commit functions", async () => {
-    router.push("/");
-    await router.isReady();
-    const wrapper = mountMain();
-    const logoutButton = wrapper.find("button");
-    await logoutButton.trigger("click");
-    expect($store.commit).toHaveBeenCalledTimes(2);
-    expect($store.commit.mock.calls[0][0]).toBe("unsubscribeFirebase");
-    expect($store.commit.mock.calls[1][0]).toBe("logout");
+    expect(mainWrapper.find("img").exists()).toBeTruthy();
+    expect(mainWrapper.find(".main-emoji").text()).toBe("🦋");
+    expect(mainWrapper.findAll("h3")).toHaveLength(2);
   });
 
   it("Main component renders as expected when not Lars is logged in", async () => {
@@ -68,20 +55,26 @@ describe("Testing the Main component", () => {
     router.push("/");
     await router.isReady();
     const wrapper = mountMain();
-    const mainWrapper = wrapper.find("main");
+    const mainWrapper = wrapper.find("section");
     expect(mainWrapper.exists()).toBeTruthy();
-    expect(mainWrapper.find("img").attributes("src")).toContain(
-      "img/wedding.JPG"
-    );
-    expect(mainWrapper.find(".header").exists()).toBeTruthy();
-    expect(mainWrapper.find("aside").text()).toContain("Tage bis zur Hochzeit");
-    const footer = mainWrapper.find("footer");
-    expect(footer.exists()).toBeTruthy();
-    expect(footer.findAll("a")).toHaveLength(2);
-    expect(footer.findAll("button")).toHaveLength(1);
+    expect(mainWrapper.find("img").exists()).toBeTruthy();
+    expect(mainWrapper.find(".main-emoji").exists()).toBeTruthy();
+    expect(mainWrapper.findAll("h3")).toHaveLength(2);
   });
 
-  it("Click on router-link with name Budget navigates to '/budget'", async () => {
+  it("Main component renders as expected when not Lars is logged in", async () => {
+    $store.state.user = "not-lars@gmail.com";
+    router.push("/");
+    await router.isReady();
+    const wrapper = mountMain();
+    const mainWrapper = wrapper.find("section");
+    expect(mainWrapper.exists()).toBeTruthy();
+    expect(mainWrapper.find("img").exists()).toBeTruthy();
+    expect(mainWrapper.find(".main-emoji").exists()).toBeTruthy();
+    expect(mainWrapper.findAll("h3")).toHaveLength(2);
+  });
+
+  /* it("Click on router-link with name Budget navigates to '/budget'", async () => {
     router.push("/");
     await router.isReady();
     const wrapper = mountMain();
@@ -101,5 +94,5 @@ describe("Testing the Main component", () => {
     jamboLink.trigger("click");
     await flushPromises();
     expect(wrapper.vm.$route.path).toBe("/jambo");
-  });
+  }); */
 });

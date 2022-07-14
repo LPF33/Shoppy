@@ -1,22 +1,37 @@
-import { mount } from "@vue/test-utils";
-import Login from "@/views/Login";
+import { DOMWrapper, mount } from "@vue/test-utils";
+import { createStore } from "vuex";
+import Login from "@/views/Login.vue";
 
-let $store = {};
+const actions = {
+  signInWithFirebase: jest.fn(),
+};
+
+let store = createStore({
+  state() {
+    return {
+      error: false,
+      errorMessage: "Error",
+    };
+  },
+  actions,
+});
 
 beforeEach(() => {
-  $store = {
-    state: {
-      error: false,
-      errorMessage: "",
+  store = createStore({
+    state() {
+      return {
+        error: false,
+        errorMessage: "Error",
+      };
     },
-    dispatch: jest.fn(),
-  };
+    actions,
+  });
 });
 
 const mountLogin = () => {
   return mount(Login, {
     global: {
-      mocks: { $store },
+      plugins: [store],
     },
   });
 };
@@ -40,33 +55,36 @@ describe("Testing the Login component", () => {
   it("Fill in email & password, fire Submit event on form, the data is passed to the dispatch function", async () => {
     const wrapper = mountLogin();
     const form = wrapper.find("form");
-    const emailInput = wrapper.find("input[type='email']");
+    const emailInput = wrapper.find(
+      "input[type='email']"
+    ) as DOMWrapper<HTMLInputElement>;
     await emailInput.setValue("test@gmail.com");
-    expect(wrapper.find("input[type='email']").element.value).toBe(
-      "test@gmail.com"
-    );
-    const passwordInput = wrapper.find("input[type='password']");
+    expect(emailInput.element.value).toBe("test@gmail.com");
+    const passwordInput = wrapper.find(
+      "input[type='password']"
+    ) as DOMWrapper<HTMLInputElement>;
     await passwordInput.setValue("123456");
-    expect(wrapper.find("input[type='password']").element.value).toBe("123456");
+    expect(passwordInput.element.value).toBe("123456");
 
     const button = form.find("button");
     await button.trigger("submit");
-    expect($store.dispatch).toHaveBeenCalledTimes(1);
-    expect($store.dispatch.mock.calls[0][0]).toBe("signIn");
-    expect($store.dispatch.mock.calls[0][1]).toEqual({
+    expect(actions.signInWithFirebase).toHaveBeenCalledTimes(1);
+    expect(actions.signInWithFirebase.mock.calls[0][1]).toEqual({
       email: "test@gmail.com",
       password: "123456",
     });
   });
 
   it("Error occurs, should show a div-tag with CSS class 'error' and error Message", () => {
-    $store = {
-      state: {
-        error: true,
-        errorMessage: "Error",
+    store = createStore({
+      state() {
+        return {
+          error: true,
+          errorMessage: "Error",
+        };
       },
-      dispatch: jest.fn(),
-    };
+      actions,
+    });
     const wrapper = mountLogin();
     expect(wrapper.html()).toMatchSnapshot();
     const errorDiv = wrapper.find(".error");

@@ -1,9 +1,14 @@
 import { mount, flushPromises } from "@vue/test-utils";
 import { createRouter, createWebHistory } from "vue-router";
-import { routes } from "@/router/index.js";
-import Navbar from "@/components/Navbar";
+import { routes } from "@/router/index";
+import Navbar from "@/components/Navbar.vue";
 
-let $store = {};
+let $store = {
+  state: {
+    error: false,
+    isAuthenticated: false,
+  },
+};
 
 beforeEach(() => {
   $store = {
@@ -29,19 +34,16 @@ const mountNavbar = () => {
 };
 
 describe("Testing the Navbar component", () => {
-  it("When user is not logged in, Navbar should have on router-link", async () => {
+  it("When user is not logged in, Navbar should not exist", async () => {
     router.push("/");
     await router.isReady();
     const wrapper = mountNavbar();
 
     expect(wrapper.html()).toMatchSnapshot();
-    expect(wrapper.find("nav").exists()).toBeTruthy();
-    expect(wrapper.findAll("a")).toHaveLength(1);
-    expect(wrapper.findAll("a")[0].attributes("href")).toBe("/login");
-    expect(wrapper.findAll("a")[0].text()).toBe("Login");
+    expect(wrapper.find("nav").exists()).toBeFalsy();
   });
 
-  it("When user is logged in, Navbar should render three router-links", async () => {
+  it("When user is logged in, Navbar should render five router-links", async () => {
     $store.state.isAuthenticated = true;
     router.push("/");
     await router.isReady();
@@ -49,13 +51,17 @@ describe("Testing the Navbar component", () => {
 
     expect(wrapper.html()).toMatchSnapshot();
     expect(wrapper.find("nav").exists()).toBeTruthy();
-    expect(wrapper.findAll("a")).toHaveLength(3);
+    expect(wrapper.findAll("a")).toHaveLength(5);
     expect(wrapper.findAll("a")[0].attributes("href")).toBe("/");
-    expect(wrapper.findAll("a")[0].text()).toBe("Main");
+    expect(wrapper.findAll("a")[0].find("p").text()).toBe("Home");
     expect(wrapper.findAll("a")[1].attributes("href")).toBe("/shoppy");
-    expect(wrapper.findAll("a")[1].text()).toBe("Shoppy");
+    expect(wrapper.findAll("a")[1].find("p").text()).toBe("Shoppy");
     expect(wrapper.findAll("a")[2].attributes("href")).toBe("/cooky");
-    expect(wrapper.findAll("a")[2].text()).toBe("Cooky");
+    expect(wrapper.findAll("a")[2].find("p").text()).toBe("Cooky");
+    expect(wrapper.findAll("a")[3].attributes("href")).toBe("/jambo");
+    expect(wrapper.findAll("a")[3].find("p").text()).toBe("Jambo");
+    expect(wrapper.findAll("a")[4].attributes("href")).toBe("/logout");
+    expect(wrapper.findAll("a")[4].find("p").text()).toBe("Logout");
     expect(wrapper.findAll(".router-link-active")).toHaveLength(1);
     expect(wrapper.find(".router-link-active").attributes("href")).toBe("/");
   });
@@ -69,7 +75,7 @@ describe("Testing the Navbar component", () => {
     await flushPromises();
     expect(wrapper.html()).toMatchSnapshot();
     expect(wrapper.find("nav").exists()).toBeTruthy();
-    expect(wrapper.findAll("a")).toHaveLength(3);
+    expect(wrapper.findAll("a")).toHaveLength(5);
     expect(wrapper.findAll(".router-link-active")).toHaveLength(1);
     expect(wrapper.find(".router-link-active").attributes("href")).toBe(
       "/shoppy"
@@ -85,7 +91,7 @@ describe("Testing the Navbar component", () => {
     await flushPromises();
     expect(wrapper.html()).toMatchSnapshot();
     expect(wrapper.find("nav").exists()).toBeTruthy();
-    expect(wrapper.findAll("a")).toHaveLength(3);
+    expect(wrapper.findAll("a")).toHaveLength(5);
     expect(wrapper.findAll(".router-link-active")).toHaveLength(1);
     expect(wrapper.find(".router-link-active").attributes("href")).toBe(
       "/cooky"
