@@ -13,7 +13,7 @@ export interface ISupermarktItem {
   key: string;
   list_id: number;
   name: string;
-  value: string | number;
+  last: boolean;
 }
 
 export interface IDrogerieItem {
@@ -22,7 +22,7 @@ export interface IDrogerieItem {
   key: string;
   list_id: number;
   name: string;
-  value: string | number;
+  last: boolean;
 }
 
 export interface IStoreState {

@@ -1,16 +1,33 @@
 <template>
   <div class="shopping-item">
-    <div @click="selectedItem" :class="{ done: item.done }">
-      <p>{{ item.name }}</p>
-      <p v-if="item.value">{{ item.value }}</p>
-    </div>
+    <input type="checkbox" v-model="checked" />
+    <input
+      type="text"
+      v-model="value"
+      :class="{ done: item.done }"
+      ref="inputRef"
+    />
     <button @click="deleteItem">❌</button>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
-import { MutationTypes, ISupermarktItem, IDrogerieItem } from "@/Types/Store";
+import {
+  defineComponent,
+  PropType,
+  ref,
+  reactive,
+  toRefs,
+  watch,
+  onMounted,
+} from "vue";
+import { useStore } from "vuex";
+import {
+  MutationTypes,
+  ISupermarktItem,
+  IDrogerieItem,
+  IStoreState,
+} from "@/Types/Store";
 import { shoppyFirestore } from "@/firebase/config";
 import { doc, deleteDoc, updateDoc } from "firebase/firestore";
 
@@ -22,23 +39,66 @@ export default defineComponent({
       required: true,
     },
   },
-  methods: {
-    async deleteItem() {
-      try {
-        await deleteDoc(doc(shoppyFirestore, "shoppy", this.item.key));
-      } catch (error) {
-        this.$store.commit(MutationTypes.SET_ERROR, error);
+  setup(props) {
+    const timeoutId = ref<number>(0);
+    const inputRef = ref<null | HTMLInputElement>(null);
+
+    const data = reactive({
+      checked: props.item.done,
+      value: props.item.name,
+    });
+
+    const store = useStore<IStoreState>();
+
+    onMounted(() => inputRef.value?.focus());
+
+    watch(
+      () => data.checked,
+      (newValue) => {
+        selectedItem(newValue);
       }
-    },
-    async selectedItem() {
+    );
+
+    watch(
+      () => data.value,
+      (newValue) => {
+        clearTimeout(timeoutId.value);
+        updateItem(newValue);
+      }
+    );
+
+    function updateItem(value: string) {
+      timeoutId.value = setTimeout(async () => {
+        try {
+          await updateDoc(doc(shoppyFirestore, "shoppy", props.item.key), {
+            name: value,
+            last: false,
+          });
+        } catch (error) {
+          store.commit(MutationTypes.SET_ERROR, error);
+        }
+      }, 500);
+    }
+
+    async function deleteItem() {
       try {
-        await updateDoc(doc(shoppyFirestore, "shoppy", this.item.key), {
-          done: !this.item.done,
+        await deleteDoc(doc(shoppyFirestore, "shoppy", props.item.key));
+      } catch (error) {
+        store.commit(MutationTypes.SET_ERROR, error);
+      }
+    }
+
+    async function selectedItem(value: boolean) {
+      try {
+        await updateDoc(doc(shoppyFirestore, "shoppy", props.item.key), {
+          done: value,
         });
       } catch (error) {
-        this.$store.commit(MutationTypes.SET_ERROR, error);
+        store.commit(MutationTypes.SET_ERROR, error);
       }
-    },
+    }
+
+    return { ...toRefs(data), updateItem, deleteItem, selectedItem, inputRef };
   },
 });
 </script>
@@ -47,27 +107,31 @@ export default defineComponent({
 .shopping-item {
   display: flex;
   width: 100%;
+  height: 40px;
   border-bottom: 1px solid grey;
   user-select: none;
   overflow: hidden;
 }
 
-.shopping-item > div {
+.shopping-item > input[type="checkbox"] {
+  width: 40px;
+}
+
+.shopping-item > input[type="text"] {
   display: flex;
   flex-grow: 1;
   cursor: pointer;
   white-space: nowrap;
   overflow-x: auto;
+  font-size: 1.2rem;
+  padding-left: 10px;
+  background-color: inherit;
+  color: inherit;
 }
 
-.shopping-item > div.done {
+.shopping-item > input.done {
   text-decoration: line-through;
   color: grey;
-}
-
-p {
-  padding: 10px;
-  font-size: 1.5rem;
 }
 
 button {

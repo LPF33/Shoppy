@@ -30,21 +30,16 @@
           <ShoppingItem v-for="it in drogerieItems" :key="it.key" :item="it" />
         </div>
       </div>
+      <AddItem :index="index" :selected="category" />
     </div>
-    <AddItem
-      v-if="visible"
-      @close="setVisible"
-      :index="index"
-      :selected="category"
-    />
-    <footer v-else>
+    <footer>
       <button
         @click="switchCategory('Supermarkt')"
         :class="{ active: category === 'Supermarkt' }"
       >
         🧀
       </button>
-      <button @click="setVisible">➕</button>
+      <button>🎨</button>
       <button
         @click="switchCategory('Drogerie')"
         :class="{ active: category === 'Drogerie' }"
@@ -56,8 +51,8 @@
 </template>
 
 <script>
-import AddItem from "@/components/AddItem";
-import ShoppingItem from "@/components/ShoppingItem";
+import AddItem from "@/components/AddItem.vue";
+import ShoppingItem from "@/components/ShoppingItem.vue";
 import { shoppyFirestore } from "@/firebase/config";
 import { VueDraggableNext } from "vue-draggable-next";
 
@@ -192,9 +187,9 @@ section > div {
 }
 
 .draggable-next span {
+  height: 40px;
   font-size: 2rem;
   border-bottom: 1px solid transparent;
-  line-height: 1.5em;
   cursor: move;
 }
 
@@ -208,7 +203,7 @@ footer {
   width: 100vw;
 }
 
-button {
+footer > button {
   height: 6rem;
   width: 6rem;
   font-size: 3rem;

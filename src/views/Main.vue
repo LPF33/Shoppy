@@ -2,20 +2,12 @@
   <section>
     <img
       class="main-img"
-      :src="
-        special(2022, 6, 15) >= 0
-          ? `${publicPath}img/cuddly_bears.gif`
-          : `${publicPath}img/kukulcan.jpg`
-      "
+      :src="`${publicPath}img/cuddly_bears.gif`"
       alt="wedding-photo"
     />
     <aside>
       <div v-if="schaetzchen" v-html="greeting()"></div>
       <div v-else><span class="emoji main-emoji">🦋</span></div>
-      <h3 v-if="special(2022, 6, 15) >= 0">
-        In <span class="highlight">{{ special(2022, 6, 15) }}</span> Tagen
-        {{ schaetzchen ? "kommst du wieder zurück" : "kommt Caroline zurück" }}
-      </h3>
       <h3 v-if="special(2022, 6, 19) > 0">
         In <span class="highlight">{{ special(2022, 6, 19) }}</span> Tagen
         fliegen wir nach Mexiko
