@@ -47,7 +47,7 @@ describe("Testing the Main component", () => {
     expect(mainWrapper.exists()).toBeTruthy();
     expect(mainWrapper.find("img").exists()).toBeTruthy();
     expect(mainWrapper.find(".main-emoji").text()).toBe("🦋");
-    expect(mainWrapper.findAll("h3")).toHaveLength(2);
+    expect(mainWrapper.findAll("h3")).toHaveLength(1);
   });
 
   it("Main component renders as expected when not Lars is logged in", async () => {
@@ -59,7 +59,7 @@ describe("Testing the Main component", () => {
     expect(mainWrapper.exists()).toBeTruthy();
     expect(mainWrapper.find("img").exists()).toBeTruthy();
     expect(mainWrapper.find(".main-emoji").exists()).toBeTruthy();
-    expect(mainWrapper.findAll("h3")).toHaveLength(2);
+    expect(mainWrapper.findAll("h3")).toHaveLength(1);
   });
 
   it("Main component renders as expected when not Lars is logged in", async () => {
@@ -71,7 +71,7 @@ describe("Testing the Main component", () => {
     expect(mainWrapper.exists()).toBeTruthy();
     expect(mainWrapper.find("img").exists()).toBeTruthy();
     expect(mainWrapper.find(".main-emoji").exists()).toBeTruthy();
-    expect(mainWrapper.findAll("h3")).toHaveLength(2);
+    expect(mainWrapper.findAll("h3")).toHaveLength(1);
   });
 
   /* it("Click on router-link with name Budget navigates to '/budget'", async () => {
