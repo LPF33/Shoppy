@@ -3,16 +3,17 @@
     <img
       class="main-img"
       :src="`${publicPath}img/cuddly_bears.gif`"
-      alt="wedding-photo"
+      alt="cuddly bears"
     />
     <aside>
       <div v-if="schaetzchen" v-html="greeting()"></div>
       <div v-else><span class="emoji main-emoji">🦋</span></div>
-      <h3 v-if="special(2022, 6, 19) > 0">
-        In <span class="highlight">{{ special(2022, 6, 19) }}</span> Tagen
-        fliegen wir nach Mexiko
+      <h3 v-if="special(2022, 8, 27) === 0">
+        Du bist noch
+        <span class="highlight">{{ special(2022, 8, 27) }}</span> Tage in London
+        🏴󠁧󠁢󠁥󠁮󠁧󠁿
       </h3>
-      <h3 v-else>Mexiko! Wir kommen! <span class="emoji">🇲🇽</span></h3>
+      <h3 v-else>London <span class="emoji">🚂</span> Düren</h3>
     </aside>
   </section>
 </template>
