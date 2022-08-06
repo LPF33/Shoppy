@@ -10,7 +10,7 @@
       <div v-else><span class="emoji main-emoji">🦋</span></div>
       <h3 v-if="special(2022, 7, 27) > 0">
         {{ schaetzchen ? "Du bist noch" : "Caroline ist noch " }}
-        <span class="highlight">{{ special(2022, 8, 27) }}</span> Tage in London
+        <span class="highlight">{{ special(2022, 7, 27) }}</span> Tage in London
         🏴󠁧󠁢󠁥󠁮󠁧󠁿
       </h3>
       <h3 v-else>London <span class="emoji">🚂</span> Düren</h3>
