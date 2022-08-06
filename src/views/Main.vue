@@ -49,9 +49,9 @@ export default defineComponent({
       if (5 <= hours && hours <= 11) {
         return '<span class="emoji main-emoji">🌞</span><h2>Guten Morgen</h2><h3>Schönen Tag, meine Kleine 🦋</h3>';
       } else if (11 < hours && hours <= 14) {
-        return '<span class="emoji main-emoji">🌼</span><h2>Schönen Mittag</h2>';
+        return '<span class="emoji main-emoji">🌼</span><h2>Schönen Mittag</h2><h3>Caroline 🦋</h3>';
       } else if (14 < hours && hours <= 17) {
-        return '<span class="emoji main-emoji">☕</span><h2>Schönen Nachmittag</h2>';
+        return '<span class="emoji main-emoji">☕</span><h2>Schönen Nachmittag</h2><h3>Caroline 🦋</h3>';
       } else if (17 < hours && hours <= 22) {
         return '<span class="emoji main-emoji">🌜</span><h2>Schönen Abend,</h2><h3>mein kleines Schätzchen 🥰</h3>';
       } else {
