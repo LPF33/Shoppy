@@ -8,8 +8,8 @@
     <aside>
       <div v-if="schaetzchen" v-html="greeting()"></div>
       <div v-else><span class="emoji main-emoji">🦋</span></div>
-      <h3 v-if="special(2022, 8, 27) === 0">
-        Du bist noch
+      <h3 v-if="special(2022, 8, 27) > 0">
+        {{ schaetzchen ? "Du bist noch" : "Caroline ist noch " }}
         <span class="highlight">{{ special(2022, 8, 27) }}</span> Tage in London
         🏴󠁧󠁢󠁥󠁮󠁧󠁿
       </h3>
