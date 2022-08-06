@@ -39,7 +39,6 @@
       >
         🧀
       </button>
-      <button>🎨</button>
       <button
         @click="switchCategory('Drogerie')"
         :class="{ active: category === 'Drogerie' }"
@@ -198,7 +197,7 @@ footer {
   bottom: 10px;
   margin-top: 2rem;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-around;
   max-width: 500px;
   width: 100vw;
 }
