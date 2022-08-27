@@ -10,6 +10,10 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-pro": "^6.1.2",
+    "@fortawesome/fontawesome-svg-core": "^6.1.2",
+    "@fortawesome/pro-duotone-svg-icons": "^6.1.2",
+    "@fortawesome/vue-fontawesome": "^3.0.1",
     "@mdi/font": "^5.9.55",
     "@vue/component-compiler-utils": "^3.1.2",
     "core-js": "^3.6.5",

@@ -11,8 +11,12 @@ describe("Testing the Jambo component", () => {
     expect(jamboSection.find("h1").text()).toBe("Jambo");
     expect(jamboSection.find("h2").text()).toBe("Start");
     expect(jamboSection.findAll("button")).toHaveLength(2);
-    expect(jamboSection.findAll("button")[0].text()).toBe("➕");
-    expect(jamboSection.findAll("button")[1].text()).toBe("⚪");
+    expect(jamboSection.findAll("button")[0].html()).toContain(
+      '<font-awesome-icon icon="fa-duotone fa-joystick"></font-awesome-icon>'
+    );
+    expect(jamboSection.findAll("button")[1].html()).toContain(
+      '<font-awesome-icon icon="fa-duotone fa-ban"></font-awesome-icon>'
+    );
   });
 
   it("Click on first button, should increment counter", async () => {
@@ -22,7 +26,9 @@ describe("Testing the Jambo component", () => {
     await incrementButton.trigger("click");
     expect(wrapper.find("h2").text()).toBe("Spielzug: 1");
     expect(wrapper.findAll(".runde")).toHaveLength(1);
-    expect(wrapper.find(".runde").text()).toBe("🎲");
+    expect(wrapper.find(".runde").html()).toContain(
+      '<font-awesome-icon icon="fa-duotone fa-card-heart"></font-awesome-icon>'
+    );
     expect(wrapper.html()).toMatchSnapshot();
   });
 

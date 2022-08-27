@@ -5,10 +5,20 @@ exports[`Testing the Jambo component Click on first button 3 times , should incr
   <h1>Jambo</h1>
   <h2>Spielzug: 3</h2>
   <div>
-    <div class="runde">🎲</div>
-    <div class="runde">🎲</div>
-    <div class="runde">🎲</div>
-  </div><button>➕</button><button>⚪</button>
+    <div class="runde">
+      <font-awesome-icon icon="fa-duotone fa-card-heart"></font-awesome-icon>
+    </div>
+    <div class="runde">
+      <font-awesome-icon icon="fa-duotone fa-card-heart"></font-awesome-icon>
+    </div>
+    <div class="runde">
+      <font-awesome-icon icon="fa-duotone fa-card-heart"></font-awesome-icon>
+    </div>
+  </div><button>
+    <font-awesome-icon icon="fa-duotone fa-joystick"></font-awesome-icon>
+  </button><button>
+    <font-awesome-icon icon="fa-duotone fa-ban"></font-awesome-icon>
+  </button>
 </section>
 `;
 
@@ -16,7 +26,11 @@ exports[`Testing the Jambo component Click on first button 4 times, click on res
 <section>
   <h1>Jambo</h1>
   <h2>Start</h2>
-  <!--v-if--><button>➕</button><button>⚪</button>
+  <!--v-if--><button>
+    <font-awesome-icon icon="fa-duotone fa-joystick"></font-awesome-icon>
+  </button><button>
+    <font-awesome-icon icon="fa-duotone fa-ban"></font-awesome-icon>
+  </button>
 </section>
 `;
 
@@ -24,7 +38,11 @@ exports[`Testing the Jambo component Click on first button 6 times, should reset
 <section>
   <h1>Jambo</h1>
   <h2>Start</h2>
-  <!--v-if--><button>➕</button><button>⚪</button>
+  <!--v-if--><button>
+    <font-awesome-icon icon="fa-duotone fa-joystick"></font-awesome-icon>
+  </button><button>
+    <font-awesome-icon icon="fa-duotone fa-ban"></font-awesome-icon>
+  </button>
 </section>
 `;
 
@@ -33,8 +51,14 @@ exports[`Testing the Jambo component Click on first button, should increment cou
   <h1>Jambo</h1>
   <h2>Spielzug: 1</h2>
   <div>
-    <div class="runde">🎲</div>
-  </div><button>➕</button><button>⚪</button>
+    <div class="runde">
+      <font-awesome-icon icon="fa-duotone fa-card-heart"></font-awesome-icon>
+    </div>
+  </div><button>
+    <font-awesome-icon icon="fa-duotone fa-joystick"></font-awesome-icon>
+  </button><button>
+    <font-awesome-icon icon="fa-duotone fa-ban"></font-awesome-icon>
+  </button>
 </section>
 `;
 
@@ -42,6 +66,10 @@ exports[`Testing the Jambo component Initial Jambo component is mounted correctl
 <section>
   <h1>Jambo</h1>
   <h2>Start</h2>
-  <!--v-if--><button>➕</button><button>⚪</button>
+  <!--v-if--><button>
+    <font-awesome-icon icon="fa-duotone fa-joystick"></font-awesome-icon>
+  </button><button>
+    <font-awesome-icon icon="fa-duotone fa-ban"></font-awesome-icon>
+  </button>
 </section>
 `;

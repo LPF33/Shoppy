@@ -3,4 +3,13 @@ module.exports = {
   transform: {
     "^.+\\.vue$": "vue-jest",
   },
+  globals: {
+    "vue-jest": {
+      compilerOptions: {
+        isCustomElement(tag) {
+          return ["font-awesome-icon"].includes(tag);
+        },
+      },
+    },
+  },
 };

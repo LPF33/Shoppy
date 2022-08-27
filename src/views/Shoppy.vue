@@ -37,13 +37,13 @@
         @click="switchCategory('Supermarkt')"
         :class="{ active: category === 'Supermarkt' }"
       >
-        🧀
+        <font-awesome-icon icon="fa-duotone fa-carrot" />
       </button>
       <button
         @click="switchCategory('Drogerie')"
         :class="{ active: category === 'Drogerie' }"
       >
-        🧴
+        <font-awesome-icon icon="fa-duotone fa-toothbrush" />
       </button>
     </footer>
   </section>

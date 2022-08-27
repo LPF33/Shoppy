@@ -102,7 +102,8 @@ export default defineComponent({
             (item) =>
               (item.startNum === day &&
                 checkMonth(item.startDate, data.today as Date)) ||
-              (item.endNum === day && checkMonth(item.endDate, data.today as Date))
+              (item.endNum === day &&
+                checkMonth(item.endDate, data.today as Date))
           );
           return color ? foundMeal?.color : foundMeal?.meal || "";
         }
@@ -114,7 +115,8 @@ export default defineComponent({
       }
       const meal = props.meals?.find(
         (item) =>
-          (item.startNum === day && checkMonth(item.startDate, data.today as Date)) ||
+          (item.startNum === day &&
+            checkMonth(item.startDate, data.today as Date)) ||
           (item.endNum === day && checkMonth(item.endDate, data.today as Date))
       );
       context.emit(

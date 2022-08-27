@@ -4,10 +4,16 @@
     <h2 v-if="!counter">Start</h2>
     <h2 v-else>Spielzug: {{ counter }}</h2>
     <div v-if="visual">
-      <div v-for="(item, index) in visual" :key="index" class="runde">🎲</div>
+      <div v-for="(item, index) in visual" :key="index" class="runde">
+        <font-awesome-icon icon="fa-duotone fa-card-heart" />
+      </div>
     </div>
-    <button @click="increment">➕</button>
-    <button @click="reset">⚪</button>
+    <button @click="increment">
+      <font-awesome-icon icon="fa-duotone fa-joystick" />
+    </button>
+    <button @click="reset">
+      <font-awesome-icon icon="fa-duotone fa-ban" />
+    </button>
   </section>
 </template>
 

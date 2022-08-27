@@ -1,30 +1,30 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Testing the Navbar component User is logged in, navigate to Cooky-Route, Navbar should render accordingly 1`] = `
-<nav><a href="/" class=""><span>🏠</span>
+<nav><a href="/" class=""><span><font-awesome-icon icon="fa-duotone fa-planet-ringed" class="icon"></font-awesome-icon></span>
     <p>Home</p>
-  </a><a href="/shoppy" class=""><span>🛒</span>
+  </a><a href="/shoppy" class=""><span><font-awesome-icon icon="fa-duotone fa-basket-shopping" class="icon"></font-awesome-icon></span>
     <p>Shoppy</p>
-  </a><a href="/cooky" class="router-link-active router-link-exact-active" aria-current="page"><span>🧑‍🍳</span>
+  </a><a href="/cooky" class="router-link-active router-link-exact-active" aria-current="page"><span><font-awesome-icon icon="fa-duotone fa-cauldron" class="icon"></font-awesome-icon></span>
     <p>Cooky</p>
-  </a><a href="/jambo" class="buttons"><span>🎲</span>
+  </a><a href="/jambo" class="buttons"><span><font-awesome-icon icon="fa-duotone fa-chess" class="icon"></font-awesome-icon></span>
     <p>Jambo</p>
-  </a><a href="/logout" class="buttons"><span>🔒</span>
+  </a><a href="/logout" class="buttons"><span><font-awesome-icon icon="fa-duotone fa-lock" class="icon"></font-awesome-icon></span>
     <p>Logout</p>
   </a></nav>
 <!--v-if-->
 `;
 
 exports[`Testing the Navbar component User is logged in, navigate to Shoppy-Route, Navbar should render accordingly 1`] = `
-<nav><a href="/" class=""><span>🏠</span>
+<nav><a href="/" class=""><span><font-awesome-icon icon="fa-duotone fa-planet-ringed" class="icon"></font-awesome-icon></span>
     <p>Home</p>
-  </a><a href="/shoppy" class="router-link-active router-link-exact-active" aria-current="page"><span>🛒</span>
+  </a><a href="/shoppy" class="router-link-active router-link-exact-active" aria-current="page"><span><font-awesome-icon icon="fa-duotone fa-basket-shopping" class="icon"></font-awesome-icon></span>
     <p>Shoppy</p>
-  </a><a href="/cooky" class=""><span>🧑‍🍳</span>
+  </a><a href="/cooky" class=""><span><font-awesome-icon icon="fa-duotone fa-cauldron" class="icon"></font-awesome-icon></span>
     <p>Cooky</p>
-  </a><a href="/jambo" class="buttons"><span>🎲</span>
+  </a><a href="/jambo" class="buttons"><span><font-awesome-icon icon="fa-duotone fa-chess" class="icon"></font-awesome-icon></span>
     <p>Jambo</p>
-  </a><a href="/logout" class="buttons"><span>🔒</span>
+  </a><a href="/logout" class="buttons"><span><font-awesome-icon icon="fa-duotone fa-lock" class="icon"></font-awesome-icon></span>
     <p>Logout</p>
   </a></nav>
 <!--v-if-->
@@ -36,15 +36,15 @@ exports[`Testing the Navbar component When error occurs, div with CSS class erro
 `;
 
 exports[`Testing the Navbar component When user is logged in, Navbar should render five router-links 1`] = `
-<nav><a aria-current="page" href="/" class="router-link-active router-link-exact-active"><span>🏠</span>
+<nav><a aria-current="page" href="/" class="router-link-active router-link-exact-active"><span><font-awesome-icon icon="fa-duotone fa-planet-ringed" class="icon"></font-awesome-icon></span>
     <p>Home</p>
-  </a><a href="/shoppy" class=""><span>🛒</span>
+  </a><a href="/shoppy" class=""><span><font-awesome-icon icon="fa-duotone fa-basket-shopping" class="icon"></font-awesome-icon></span>
     <p>Shoppy</p>
-  </a><a href="/cooky" class=""><span>🧑‍🍳</span>
+  </a><a href="/cooky" class=""><span><font-awesome-icon icon="fa-duotone fa-cauldron" class="icon"></font-awesome-icon></span>
     <p>Cooky</p>
-  </a><a href="/jambo" class="buttons"><span>🎲</span>
+  </a><a href="/jambo" class="buttons"><span><font-awesome-icon icon="fa-duotone fa-chess" class="icon"></font-awesome-icon></span>
     <p>Jambo</p>
-  </a><a href="/logout" class="buttons"><span>🔒</span>
+  </a><a href="/logout" class="buttons"><span><font-awesome-icon icon="fa-duotone fa-lock" class="icon"></font-awesome-icon></span>
     <p>Logout</p>
   </a></nav>
 <!--v-if-->

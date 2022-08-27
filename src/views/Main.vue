@@ -8,12 +8,15 @@
     <aside>
       <div v-if="schaetzchen" v-html="greeting()"></div>
       <div v-else><span class="emoji main-emoji">🦋</span></div>
-      <h3 v-if="special(2022, 7, 27) > 0">
-        {{ schaetzchen ? "Du bist noch" : "Caroline ist noch " }}
-        <span class="highlight">{{ special(2022, 7, 27) }}</span> Tage in London
-        🏴󠁧󠁢󠁥󠁮󠁧󠁿
+      <h3 v-if="special(2022, 8, 2) > 0">
+        <!-- <span class="highlight">{{ special(2022, 8, 2) }}</span> -->
+        <font-awesome-icon
+          icon="fa-duotone fa-screwdriver-wrench"
+          class="construction"
+        />
+        Shoppy wird umgebaut
       </h3>
-      <h3 v-else>London <span class="emoji">🚂</span> Düren</h3>
+      <h3 v-else>London <span class="emoji">🚂</span> Geburstag</h3>
     </aside>
   </section>
 </template>
@@ -108,5 +111,14 @@ aside {
   border-radius: 50%;
   display: inline-block;
   background-color: rgba(184, 184, 184, 0.3);
+}
+
+.construction {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 2rem;
+  --fa-secondary-opacity: 1;
+  --fa-primary-color: rgb(232, 255, 115);
+  --fa-secondary-color: red;
 }
 </style>

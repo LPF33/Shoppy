@@ -1,23 +1,29 @@
 <template>
   <nav v-if="isLoggedIn">
     <router-link :to="{ name: 'Main' }"
-      ><span>🏠</span>
+      ><span
+        ><font-awesome-icon icon="fa-duotone fa-planet-ringed" class="icon"
+      /></span>
       <p>Home</p>
     </router-link>
     <router-link :to="{ name: 'Shoppy' }">
-      <span>🛒</span>
+      <span
+        ><font-awesome-icon icon="fa-duotone fa-basket-shopping" class="icon"
+      /></span>
       <p>Shoppy</p>
     </router-link>
     <router-link :to="{ name: 'Cooky' }">
-      <span>🧑‍🍳</span>
+      <span
+        ><font-awesome-icon icon="fa-duotone fa-cauldron" class="icon"
+      /></span>
       <p>Cooky</p>
     </router-link>
     <router-link :to="{ name: 'Jambo' }" class="buttons">
-      <span>🎲</span>
+      <span><font-awesome-icon icon="fa-duotone fa-chess" class="icon" /></span>
       <p>Jambo</p>
     </router-link>
     <router-link :to="{ name: 'Logout' }" class="buttons">
-      <span>🔒</span>
+      <span><font-awesome-icon icon="fa-duotone fa-lock" class="icon" /></span>
       <p>Logout</p>
     </router-link>
   </nav>
@@ -67,8 +73,19 @@ nav a > span {
   background-color: rgba(184, 184, 184, 0.3);
 }
 
+nav a > span .icon {
+  --fa-secondary-opacity: 1;
+  --fa-primary-color: black;
+  --fa-secondary-color: white;
+}
+
 nav a.router-link-exact-active > span {
-  background-color: #ffeda3;
+  background-color: black;
+}
+
+nav a.router-link-exact-active > span .icon {
+  --fa-primary-color: rgb(255, 92, 92);
+  --fa-secondary-color: white;
 }
 
 nav a > p {
@@ -77,7 +94,7 @@ nav a > p {
 }
 
 nav a.router-link-exact-active > p {
-  color: #ffeda3;
+  color: white;
 }
 
 .error-nav {
