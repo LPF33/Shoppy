@@ -20,8 +20,8 @@
         icon="fa-duotone fa-cards-blank"
         style="
           --fa-secondary-opacity: 1;
-          --fa-primary-color: rgb(49, 8, 123);
-          --fa-secondary-color: rgb(250, 47, 181);
+          --fa-primary-color: rgb(246, 90, 131);
+          --fa-secondary-color: rgb(127, 183, 126);
         "
       />
     </button>
@@ -76,7 +76,7 @@ section {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  background-color: #ffeda3;
+  background-color: rgb(255, 232, 152);
   user-select: none;
 }
 
