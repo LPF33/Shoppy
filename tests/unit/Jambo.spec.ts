@@ -12,10 +12,10 @@ describe("Testing the Jambo component", () => {
     expect(jamboSection.find("h2").text()).toBe("Start");
     expect(jamboSection.findAll("button")).toHaveLength(2);
     expect(jamboSection.findAll("button")[0].html()).toContain(
-      '<font-awesome-icon icon="fa-duotone fa-joystick"></font-awesome-icon>'
+      '<font-awesome-icon icon="fa-duotone fa-cards-blank"'
     );
     expect(jamboSection.findAll("button")[1].html()).toContain(
-      '<font-awesome-icon icon="fa-duotone fa-ban"></font-awesome-icon>'
+      '<font-awesome-icon icon="fa-duotone fa-eraser'
     );
   });
 
@@ -27,7 +27,7 @@ describe("Testing the Jambo component", () => {
     expect(wrapper.find("h2").text()).toBe("Spielzug: 1");
     expect(wrapper.findAll(".runde")).toHaveLength(1);
     expect(wrapper.find(".runde").html()).toContain(
-      '<font-awesome-icon icon="fa-duotone fa-card-heart"></font-awesome-icon>'
+      '<font-awesome-icon icon="fa-duotone fa-card-heart'
     );
     expect(wrapper.html()).toMatchSnapshot();
   });

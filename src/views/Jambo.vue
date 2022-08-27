@@ -5,14 +5,35 @@
     <h2 v-else>Spielzug: {{ counter }}</h2>
     <div v-if="visual">
       <div v-for="(item, index) in visual" :key="index" class="runde">
-        <font-awesome-icon icon="fa-duotone fa-card-heart" />
+        <font-awesome-icon
+          icon="fa-duotone fa-card-heart"
+          style="
+            --fa-secondary-opacity: 1;
+            --fa-primary-color: rgb(255, 92, 92);
+            --fa-secondary-color: white;
+          "
+        />
       </div>
     </div>
     <button @click="increment">
-      <font-awesome-icon icon="fa-duotone fa-joystick" />
+      <font-awesome-icon
+        icon="fa-duotone fa-cards-blank"
+        style="
+          --fa-secondary-opacity: 1;
+          --fa-primary-color: rgb(49, 8, 123);
+          --fa-secondary-color: rgb(250, 47, 181);
+        "
+      />
     </button>
     <button @click="reset">
-      <font-awesome-icon icon="fa-duotone fa-ban" />
+      <font-awesome-icon
+        icon="fa-duotone fa-eraser"
+        style="
+          --fa-secondary-opacity: 1;
+          --fa-primary-color: red;
+          --fa-secondary-color: black;
+        "
+      />
     </button>
   </section>
 </template>

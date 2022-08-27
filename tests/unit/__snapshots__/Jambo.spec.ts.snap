@@ -6,18 +6,18 @@ exports[`Testing the Jambo component Click on first button 3 times , should incr
   <h2>Spielzug: 3</h2>
   <div>
     <div class="runde">
-      <font-awesome-icon icon="fa-duotone fa-card-heart"></font-awesome-icon>
+      <font-awesome-icon icon="fa-duotone fa-card-heart" style="--fa-secondary-opacity: 1; --fa-primary-color: rgb(255, 92, 92); --fa-secondary-color: white;"></font-awesome-icon>
     </div>
     <div class="runde">
-      <font-awesome-icon icon="fa-duotone fa-card-heart"></font-awesome-icon>
+      <font-awesome-icon icon="fa-duotone fa-card-heart" style="--fa-secondary-opacity: 1; --fa-primary-color: rgb(255, 92, 92); --fa-secondary-color: white;"></font-awesome-icon>
     </div>
     <div class="runde">
-      <font-awesome-icon icon="fa-duotone fa-card-heart"></font-awesome-icon>
+      <font-awesome-icon icon="fa-duotone fa-card-heart" style="--fa-secondary-opacity: 1; --fa-primary-color: rgb(255, 92, 92); --fa-secondary-color: white;"></font-awesome-icon>
     </div>
   </div><button>
-    <font-awesome-icon icon="fa-duotone fa-joystick"></font-awesome-icon>
+    <font-awesome-icon icon="fa-duotone fa-cards-blank" style="--fa-secondary-opacity: 1; --fa-primary-color: rgb(49, 8, 123); --fa-secondary-color: rgb(250, 47, 181);"></font-awesome-icon>
   </button><button>
-    <font-awesome-icon icon="fa-duotone fa-ban"></font-awesome-icon>
+    <font-awesome-icon icon="fa-duotone fa-eraser" style="--fa-secondary-opacity: 1; --fa-primary-color: red; --fa-secondary-color: black;"></font-awesome-icon>
   </button>
 </section>
 `;
@@ -27,9 +27,9 @@ exports[`Testing the Jambo component Click on first button 4 times, click on res
   <h1>Jambo</h1>
   <h2>Start</h2>
   <!--v-if--><button>
-    <font-awesome-icon icon="fa-duotone fa-joystick"></font-awesome-icon>
+    <font-awesome-icon icon="fa-duotone fa-cards-blank" style="--fa-secondary-opacity: 1; --fa-primary-color: rgb(49, 8, 123); --fa-secondary-color: rgb(250, 47, 181);"></font-awesome-icon>
   </button><button>
-    <font-awesome-icon icon="fa-duotone fa-ban"></font-awesome-icon>
+    <font-awesome-icon icon="fa-duotone fa-eraser" style="--fa-secondary-opacity: 1; --fa-primary-color: red; --fa-secondary-color: black;"></font-awesome-icon>
   </button>
 </section>
 `;
@@ -39,9 +39,9 @@ exports[`Testing the Jambo component Click on first button 6 times, should reset
   <h1>Jambo</h1>
   <h2>Start</h2>
   <!--v-if--><button>
-    <font-awesome-icon icon="fa-duotone fa-joystick"></font-awesome-icon>
+    <font-awesome-icon icon="fa-duotone fa-cards-blank" style="--fa-secondary-opacity: 1; --fa-primary-color: rgb(49, 8, 123); --fa-secondary-color: rgb(250, 47, 181);"></font-awesome-icon>
   </button><button>
-    <font-awesome-icon icon="fa-duotone fa-ban"></font-awesome-icon>
+    <font-awesome-icon icon="fa-duotone fa-eraser" style="--fa-secondary-opacity: 1; --fa-primary-color: red; --fa-secondary-color: black;"></font-awesome-icon>
   </button>
 </section>
 `;
@@ -52,12 +52,12 @@ exports[`Testing the Jambo component Click on first button, should increment cou
   <h2>Spielzug: 1</h2>
   <div>
     <div class="runde">
-      <font-awesome-icon icon="fa-duotone fa-card-heart"></font-awesome-icon>
+      <font-awesome-icon icon="fa-duotone fa-card-heart" style="--fa-secondary-opacity: 1; --fa-primary-color: rgb(255, 92, 92); --fa-secondary-color: white;"></font-awesome-icon>
     </div>
   </div><button>
-    <font-awesome-icon icon="fa-duotone fa-joystick"></font-awesome-icon>
+    <font-awesome-icon icon="fa-duotone fa-cards-blank" style="--fa-secondary-opacity: 1; --fa-primary-color: rgb(49, 8, 123); --fa-secondary-color: rgb(250, 47, 181);"></font-awesome-icon>
   </button><button>
-    <font-awesome-icon icon="fa-duotone fa-ban"></font-awesome-icon>
+    <font-awesome-icon icon="fa-duotone fa-eraser" style="--fa-secondary-opacity: 1; --fa-primary-color: red; --fa-secondary-color: black;"></font-awesome-icon>
   </button>
 </section>
 `;
@@ -67,9 +67,9 @@ exports[`Testing the Jambo component Initial Jambo component is mounted correctl
   <h1>Jambo</h1>
   <h2>Start</h2>
   <!--v-if--><button>
-    <font-awesome-icon icon="fa-duotone fa-joystick"></font-awesome-icon>
+    <font-awesome-icon icon="fa-duotone fa-cards-blank" style="--fa-secondary-opacity: 1; --fa-primary-color: rgb(49, 8, 123); --fa-secondary-color: rgb(250, 47, 181);"></font-awesome-icon>
   </button><button>
-    <font-awesome-icon icon="fa-duotone fa-ban"></font-awesome-icon>
+    <font-awesome-icon icon="fa-duotone fa-eraser" style="--fa-secondary-opacity: 1; --fa-primary-color: red; --fa-secondary-color: black;"></font-awesome-icon>
   </button>
 </section>
 `;
