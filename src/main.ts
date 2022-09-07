@@ -18,6 +18,9 @@ import {
   faCarrot,
   faToothbrush,
   faScrewdriverWrench,
+  faCalendarCirclePlus,
+  faCalendarXmark,
+  faCircleXmark,
 } from "@fortawesome/pro-duotone-svg-icons";
 
 /* add icons to the library */
@@ -32,7 +35,10 @@ library.add(
   faEraser,
   faCarrot,
   faToothbrush,
-  faScrewdriverWrench
+  faScrewdriverWrench,
+  faCalendarCirclePlus,
+  faCalendarXmark,
+  faCircleXmark
 );
 
 const app = createApp(App)

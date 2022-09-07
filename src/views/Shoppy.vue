@@ -30,7 +30,11 @@
           <ShoppingItem v-for="it in drogerieItems" :key="it.key" :item="it" />
         </div>
       </div>
-      <AddItem :index="index" :selected="category" />
+      <AddItem
+        :index="index"
+        :selected="category"
+        @new-item-added="focus = true"
+      />
     </div>
     <footer>
       <button
@@ -203,9 +207,9 @@ footer {
 }
 
 footer > button {
-  height: 6rem;
-  width: 6rem;
-  font-size: 3rem;
+  height: 4rem;
+  width: 4rem;
+  font-size: 2rem;
   border: 1px solid grey;
   border-radius: 50%;
   line-height: 1.5;

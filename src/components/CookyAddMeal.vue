@@ -1,17 +1,18 @@
 <template>
   <div class="cooky-add-meal">
-    <span @click.self="closeModal">🌭🍕🍔🍳🧇🥞🍖🥩🍣🍩</span>
-    <span @click.self="closeModal">🥑🍐🍏🍈🍉🍋🍆🌽🍅🍓🥦</span>
-    <span @click.self="closeModal">🍿🧈🥯🌯🥗🍗🍙🍱🍍🥭🍎</span>
-    <span @click.self="closeModal">🥨🥐🍞🧈🥗🍙🍭🍹🥛🧁</span>
+    <button @click="closeModal">
+      <font-awesome-icon icon="fa-duotone fa-circle-xmark" class="icon" />
+    </button>
     <form @submit.prevent>
       <h1>Was soll's sein?</h1>
       <input type="text" v-model="meal" placeholder="?" />
       <input type="date" v-model="startDate" />
       <input type="date" v-model="endDate" />
-      <button @click="addNewMeal">➕</button>
+      <button @click="addNewMeal">
+        <font-awesome-icon icon="fa-duotone fa-calendar-circle-plus" />
+      </button>
       <button id="delete-meal" v-if="existingKey" @click="deleteMeal">
-        ❌
+        <font-awesome-icon icon="fa-duotone fa-calendar-xmark" class="icon" />
       </button>
     </form>
   </div>
@@ -130,20 +131,35 @@ export default defineComponent({
 
 <style scoped>
 .cooky-add-meal {
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
   width: 500px;
   max-width: 100vw;
-  height: 60vh;
+  height: 100%;
   margin: 0 auto;
-  background-color: rgb(0, 0, 0);
+  background-color: var(--dark-grey);
   color: white;
-  border-radius: 10px;
-  margin-top: 10px;
   overflow: hidden;
 }
 
+.cooky-add-meal > button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: inherit;
+  font-size: 3rem;
+  cursor: pointer;
+}
+
+.cooky-add-meal > button .icon {
+  --fa-secondary-opacity: 1;
+  --fa-primary-color: var(--color-red);
+  --fa-secondary-color: white;
+}
+
 h1 {
-  background-color: black;
   border-radius: 10px;
 }
 
@@ -202,7 +218,7 @@ input {
   margin-top: 10px;
 }
 
-button {
+form button {
   font-size: 3rem;
   height: 6rem;
   width: 6rem;

@@ -6,17 +6,39 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { ActionTypes, MutationTypes } from "@/Types/Store";
+import { defineComponent, onMounted, onUnmounted } from "vue";
+import { ActionTypes, MutationTypes, IStoreState } from "@/Types/Store";
+import { useStore } from "vuex";
 import Navbar from "@/components/Navbar.vue";
 
 export default defineComponent({
   components: { Navbar },
-  mounted() {
-    this.$store.dispatch(ActionTypes.CHECK_AUTH);
-  },
-  unmounted() {
-    this.$store.commit(MutationTypes.UNSUBSCRIBE_FIREBASE);
+  setup() {
+    const store = useStore<IStoreState>();
+    let windowWidth = 0;
+
+    function setAppHeight() {
+      if (windowWidth === window.innerWidth) {
+        return;
+      }
+      windowWidth = window.innerWidth;
+      document.documentElement.style.setProperty(
+        "--vh",
+        `${window.innerHeight}px`
+      );
+    }
+
+    setAppHeight();
+
+    onMounted(() => {
+      store.dispatch(ActionTypes.CHECK_AUTH);
+      window.addEventListener("resize", setAppHeight);
+    });
+
+    onUnmounted(() => {
+      store.commit(MutationTypes.UNSUBSCRIBE_FIREBASE);
+      window.removeEventListener("resize", setAppHeight);
+    });
   },
 });
 </script>
@@ -30,11 +52,16 @@ export default defineComponent({
   box-sizing: border-box;
 }
 
+:root {
+  --dark-grey: #232323;
+  --color-red: rgb(255, 92, 92);
+}
+
 #app {
   display: flex;
   flex-direction: column;
   width: 100vw;
-  height: 100vh;
+  height: var(--vh, 100vh);
 }
 
 main {
