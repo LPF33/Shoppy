@@ -15,29 +15,13 @@ export default defineComponent({
   components: { Navbar },
   setup() {
     const store = useStore<IStoreState>();
-    let windowWidth = 0;
-
-    function setAppHeight() {
-      if (windowWidth === window.innerWidth) {
-        return;
-      }
-      windowWidth = window.innerWidth;
-      document.documentElement.style.setProperty(
-        "--vh",
-        `${window.innerHeight}px`
-      );
-    }
-
-    setAppHeight();
 
     onMounted(() => {
       store.dispatch(ActionTypes.CHECK_AUTH);
-      window.addEventListener("resize", setAppHeight);
     });
 
     onUnmounted(() => {
       store.commit(MutationTypes.UNSUBSCRIBE_FIREBASE);
-      window.removeEventListener("resize", setAppHeight);
     });
   },
 });

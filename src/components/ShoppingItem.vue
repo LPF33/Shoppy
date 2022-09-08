@@ -12,15 +12,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  PropType,
-  ref,
-  reactive,
-  toRefs,
-  watch,
-  onMounted,
-} from "vue";
+import { defineComponent, PropType, ref, reactive, toRefs, watch } from "vue";
 import { useStore } from "vuex";
 import {
   MutationTypes,
@@ -49,8 +41,6 @@ export default defineComponent({
     });
 
     const store = useStore<IStoreState>();
-
-    onMounted(() => inputRef.value?.focus());
 
     watch(
       () => data.checked,
