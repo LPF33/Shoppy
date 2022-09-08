@@ -1,7 +1,21 @@
 <template>
-  <section @click.self="setVisible">
-    <h1>Shoppy</h1>
-    <div>
+  <section>
+    <header>
+      <button
+        @click="switchCategory('Supermarkt')"
+        :class="{ active: category === 'Supermarkt' }"
+      >
+        <font-awesome-icon icon="fa-duotone fa-carrot" />
+      </button>
+      <h1>Shoppy</h1>
+      <button
+        @click="switchCategory('Drogerie')"
+        :class="{ active: category === 'Drogerie' }"
+      >
+        <font-awesome-icon icon="fa-duotone fa-toothbrush" />
+      </button>
+    </header>
+    <div ref="list">
       <div class="section-draggable" v-if="category === 'Supermarkt'">
         <VueDraggableNext
           v-model="supermarktItems"
@@ -36,20 +50,6 @@
         @new-item-added="focus = true"
       />
     </div>
-    <footer>
-      <button
-        @click="switchCategory('Supermarkt')"
-        :class="{ active: category === 'Supermarkt' }"
-      >
-        <font-awesome-icon icon="fa-duotone fa-carrot" />
-      </button>
-      <button
-        @click="switchCategory('Drogerie')"
-        :class="{ active: category === 'Drogerie' }"
-      >
-        <font-awesome-icon icon="fa-duotone fa-toothbrush" />
-      </button>
-    </footer>
   </section>
 </template>
 
@@ -58,6 +58,7 @@ import AddItem from "@/components/AddItem.vue";
 import ShoppingItem from "@/components/ShoppingItem.vue";
 import { shoppyFirestore } from "@/firebase/config";
 import { VueDraggableNext } from "vue-draggable-next";
+import { doc, updateDoc } from "firebase/firestore";
 
 export default {
   name: "Shoppy",
@@ -71,17 +72,16 @@ export default {
       supermarktItems: this.$store.state.supermarktItems,
       drogerieItems: this.$store.state.drogerieItems,
       category: "Supermarkt",
-      visible: false,
       index: this.$store.state.shoppyIndex ?? 0,
       unwatch: null,
     };
   },
   methods: {
-    setVisible() {
-      this.visible = !this.visible;
-    },
     switchCategory(category) {
       this.category = category;
+    },
+    scrollToTop() {
+      this.$refs.list.scrollTop = this.$refs.list.scrollHeight;
     },
     onDrop(e) {
       const { oldIndex, newIndex, element: draggedItem } = e.moved;
@@ -120,10 +120,9 @@ export default {
       this.updateFirebase(draggedItem);
     },
     async updateFirebase(item) {
-      await shoppyFirestore
-        .collection("shoppy")
-        .doc(item.key)
-        .update({ list_id: item.list_id });
+      await updateDoc(doc(shoppyFirestore, "shoppy", item.key), {
+        list_id: item.list_id,
+      });
     },
   },
   created() {
@@ -136,10 +135,18 @@ export default {
       }
     );
   },
+  mounted() {
+    this.scrollToTop();
+    window.addEventListener("resize", this.scrollToTop.bind(this));
+  },
+  updated() {
+    this.$refs.list.scrollTop = this.$refs.list.scrollHeight;
+  },
   beforeUnmount() {
     if (typeof this.unwatch === "function") {
       this.unwatch();
     }
+    window.removeEventListener("resize", this.scrollToTop.bind(this));
   },
 };
 </script>
@@ -159,15 +166,39 @@ section {
   user-select: none;
 }
 
-h1 {
-  margin: 10px 0;
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 10px 0;
+}
+
+header h1 {
+  margin: 0 30px;
   height: 1.5em;
+}
+
+header > button {
+  height: 3rem;
+  width: 3rem;
+  font-size: 1.5rem;
+  border: 1px solid grey;
+  border-radius: 50%;
+  line-height: 1.2;
+  padding: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+header button.active {
+  background-color: #ffeda3;
 }
 
 section > div {
   position: absolute;
-  top: calc(2rem + 20px);
-  bottom: 8rem;
+  top: calc(3rem + 20px);
+  bottom: 1rem;
   max-width: 500px;
   width: 90vw;
   overflow-y: auto;
@@ -194,31 +225,5 @@ section > div {
   font-size: 2rem;
   border-bottom: 1px solid transparent;
   cursor: move;
-}
-
-footer {
-  position: absolute;
-  bottom: 10px;
-  margin-top: 2rem;
-  display: flex;
-  justify-content: space-around;
-  max-width: 500px;
-  width: 100vw;
-}
-
-footer > button {
-  height: 4rem;
-  width: 4rem;
-  font-size: 2rem;
-  border: 1px solid grey;
-  border-radius: 50%;
-  line-height: 1.5;
-  padding: 10px;
-  cursor: pointer;
-  user-select: none;
-}
-
-button.active {
-  background-color: #ffeda3;
 }
 </style>
