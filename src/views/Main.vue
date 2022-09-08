@@ -1,23 +1,29 @@
 <template>
   <section>
-    <img
-      class="main-img"
-      :src="`${publicPath}img/cuddly_bears.gif`"
-      alt="cuddly bears"
-    />
-    <aside>
-      <div v-if="schaetzchen" v-html="greeting()"></div>
-      <div v-else><span class="emoji main-emoji">🦋</span></div>
-      <h3 v-if="special(2022, 8, 2) > 0">
-        <!-- <span class="highlight">{{ special(2022, 8, 2) }}</span> -->
-        <font-awesome-icon
-          icon="fa-duotone fa-screwdriver-wrench"
-          class="construction"
-        />
-        Shoppy wird umgebaut
-      </h3>
-      <h3 v-else>London <span class="emoji">🚂</span> Geburstag</h3>
-    </aside>
+    <div class="grid">
+      <div>Wochenereignisse</div>
+      <div>
+        <img :src="`${publicPath}img/cuddly_bears.gif`" alt="cuddly bears" />
+      </div>
+      <div>Kochen</div>
+      <div></div>
+      <div></div>
+      <div>
+        <router-link :to="{ name: 'Budget' }">
+          <span
+            ><font-awesome-icon icon="fa-duotone fa-chart-mixed" class="icon"
+          /></span>
+        </router-link>
+      </div>
+      <div>
+        <router-link :to="{ name: 'Budget' }">
+          <span
+            ><font-awesome-icon icon="fa-duotone fa-gear" class="icon"
+          /></span>
+        </router-link>
+      </div>
+    </div>
+    <aside v-html="greeting()"></aside>
   </section>
 </template>
 
@@ -29,12 +35,8 @@ export default defineComponent({
   data() {
     return {
       publicPath: process.env.BASE_URL,
+      self: this.$store.state.user === "lars@gmail.com",
     };
-  },
-  computed: {
-    schaetzchen(): boolean {
-      return this.$store.state.user !== "lars@gmail.com";
-    },
   },
   methods: {
     special(year: number, month: number, day: number): number {
@@ -50,15 +52,25 @@ export default defineComponent({
       const now = new Date();
       const hours = now.getHours();
       if (5 <= hours && hours <= 11) {
-        return '<span class="emoji main-emoji">🌞</span><h2>Guten Morgen</h2><h3>Schönen Tag, meine Kleine 🦋</h3>';
+        return `<span class="emoji main-emoji">🌞</span><h2>Guten Morgen</h2>${
+          !this.self ? "<h3>Schönen Tag, meine Kleine 🦋</h3>" : ""
+        }`;
       } else if (11 < hours && hours <= 14) {
-        return '<span class="emoji main-emoji">🌼</span><h2>Schönen Mittag</h2><h3>Caroline 🦋</h3>';
+        return `<span class="emoji main-emoji">🦋</span><h2>Schönen Mittag</h2>${
+          !this.self ? "<h3>Caroline 🦋</h3>" : ""
+        }`;
       } else if (14 < hours && hours <= 17) {
-        return '<span class="emoji main-emoji">☕</span><h2>Schönen Nachmittag</h2><h3>Caroline 🦋</h3>';
+        return `<span class="emoji main-emoji">🌼</span><h2>Schönen Nachmittag</h2>${
+          !this.self ? "<h3>Caroline 🦋</h3>" : ""
+        }`;
       } else if (17 < hours && hours <= 22) {
-        return '<span class="emoji main-emoji">🌜</span><h2>Schönen Abend,</h2><h3>mein kleines Schätzchen 🥰</h3>';
+        return `<span class="emoji main-emoji">🌜</span><h2>Schönen Abend!</h2>${
+          !this.self ? "<h3>Mein kleines Schätzchen 🥰</h3>" : ""
+        }`;
       } else {
-        return '<span class="emoji main-emoji">😴</span><h2>Schlaf schön!</h2><h3> Gute Nacht, meine Kleine ♥️</h3>';
+        return `<span class="emoji main-emoji">😴</span><h2>Schlaf schön!</h2>${
+          !this.self ? "<h3> Gute Nacht, meine Kleine ♥️</h3>" : ""
+        }`;
       }
     },
   },
@@ -68,7 +80,7 @@ export default defineComponent({
 <style scoped>
 section {
   position: relative;
-  background-color: #ffffff;
+  background-color: white;
   width: 100%;
   height: calc(100vh - 90px);
   display: flex;
@@ -76,49 +88,60 @@ section {
   align-items: center;
 }
 
-div + h3,
-h3 + h3 {
-  margin-top: 10px;
+.grid {
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-rows: repeat(4, min(150px, 25%));
+  grid-template-columns: repeat(4, min(150px, 25%));
+  gap: 5px;
+  justify-content: center;
+  align-content: center;
+  grid-template-areas:
+    "event event img img"
+    "event event img img"
+    "cooky cooky icon icon2"
+    "cooky cooky icon3 icon4";
+  width: 100%;
+  height: 90%;
 }
 
-.main-img {
-  max-width: 100%;
-  height: 60%;
-  padding: 30px;
+.grid div:first-child {
+  grid-area: event;
+}
+
+.grid div:nth-child(2) {
+  background-color: white;
+  border-radius: 10px;
+  margin: 20px;
+  grid-area: img;
+}
+
+.grid div:nth-child(3) {
+  grid-area: cooky;
+}
+
+.grid img {
+  width: 100%;
+  height: 100%;
   object-fit: contain;
 }
 
+.grid .icon {
+  font-size: 5rem;
+  --fa-secondary-opacity: 1;
+  --fa-primary-color: black;
+  --fa-secondary-color: white;
+}
+
 aside {
-  height: 41%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
   width: 100%;
+  height: 10%;
   background-color: #232323;
   color: rgb(255, 255, 255);
   border-radius: 50px 0 0 0;
-  padding-left: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.highlight {
-  color: rgb(233, 131, 131);
-  font-weight: bold;
-  width: 30px;
-  height: 30px;
-  line-height: 166%;
-  text-align: center;
-  vertical-align: baseline;
-  border-radius: 50%;
-  display: inline-block;
-  background-color: rgba(184, 184, 184, 0.3);
-}
-
-.construction {
-  display: block;
-  margin-bottom: 10px;
-  font-size: 2rem;
-  --fa-secondary-opacity: 1;
-  --fa-primary-color: rgb(232, 255, 115);
-  --fa-secondary-color: red;
+  padding-left: 60px;
 }
 </style>

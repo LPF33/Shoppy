@@ -54,6 +54,7 @@ export default defineComponent({
 
 :root {
   --dark-grey: #232323;
+  --light-grey: rgba(184, 184, 184);
   --color-red: rgb(255, 92, 92);
 }
 
@@ -62,6 +63,11 @@ export default defineComponent({
   flex-direction: column;
   width: 100vw;
   height: var(--vh, 100vh);
+}
+
+h2,
+h3 {
+  font-weight: normal;
 }
 
 main {
@@ -75,7 +81,8 @@ span.emoji {
 
 .main-emoji {
   position: absolute;
-  top: 60%;
+  top: 90%;
+  left: 15px;
   transform: translateY(-50%);
 }
 </style>

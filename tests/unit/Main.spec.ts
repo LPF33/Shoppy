@@ -46,53 +46,5 @@ describe("Testing the Main component", () => {
     const mainWrapper = wrapper.find("section");
     expect(mainWrapper.exists()).toBeTruthy();
     expect(mainWrapper.find("img").exists()).toBeTruthy();
-    expect(mainWrapper.find(".main-emoji").text()).toBe("🦋");
-    expect(mainWrapper.findAll("h3")).toHaveLength(1);
   });
-
-  it("Main component renders as expected when not Lars is logged in", async () => {
-    $store.state.user = "not-lars@gmail.com";
-    router.push("/");
-    await router.isReady();
-    const wrapper = mountMain();
-    const mainWrapper = wrapper.find("section");
-    expect(mainWrapper.exists()).toBeTruthy();
-    expect(mainWrapper.find("img").exists()).toBeTruthy();
-    expect(mainWrapper.find(".main-emoji").exists()).toBeTruthy();
-    expect(mainWrapper.findAll("h3")).toHaveLength(2);
-  });
-
-  it("Main component renders as expected when not Lars is logged in", async () => {
-    $store.state.user = "not-lars@gmail.com";
-    router.push("/");
-    await router.isReady();
-    const wrapper = mountMain();
-    const mainWrapper = wrapper.find("section");
-    expect(mainWrapper.exists()).toBeTruthy();
-    expect(mainWrapper.find("img").exists()).toBeTruthy();
-    expect(mainWrapper.find(".main-emoji").exists()).toBeTruthy();
-    expect(mainWrapper.findAll("h3")).toHaveLength(2);
-  });
-
-  /* it("Click on router-link with name Budget navigates to '/budget'", async () => {
-    router.push("/");
-    await router.isReady();
-    const wrapper = mountMain();
-    const jamboLink = wrapper.findAll("a")[0];
-    expect(jamboLink.attributes("href")).toBe("/budget");
-    jamboLink.trigger("click");
-    await flushPromises();
-    expect(wrapper.vm.$route.path).toBe("/budget");
-  });
-
-  it("Click on router-link with name Jambo navigates to '/jambo'", async () => {
-    router.push("/");
-    await router.isReady();
-    const wrapper = mountMain();
-    const jamboLink = wrapper.findAll("a")[1];
-    expect(jamboLink.attributes("href")).toBe("/jambo");
-    jamboLink.trigger("click");
-    await flushPromises();
-    expect(wrapper.vm.$route.path).toBe("/jambo");
-  }); */
 });
