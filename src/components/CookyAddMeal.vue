@@ -135,7 +135,7 @@ export default defineComponent({
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 500px;
+  width: 755px;
   max-width: 100vw;
   height: 100%;
   margin: 0 auto;
