@@ -8,14 +8,18 @@
     /></span>
     <div>
       <label for="first" v-if="firstDone"
-        ><font-awesome-icon icon="fa-duotone fa-dolphin" class="dolphin"
+        ><font-awesome-icon
+          icon="fa-duotone fa-person-swimming"
+          class="swimmer"
       /></label>
       <label for="first" v-else
         ><font-awesome-icon icon="fa-duotone fa-water-ladder" class="ladder"
       /></label>
       <input type="checkbox" id="first" v-model="firstDone" />
       <label for="second" v-if="secondDone"
-        ><font-awesome-icon icon="fa-duotone fa-dolphin" class="dolphin"
+        ><font-awesome-icon
+          icon="fa-duotone fa-person-swimming"
+          class="swimmer"
       /></label>
       <label for="second" v-else
         ><font-awesome-icon icon="fa-duotone fa-water-ladder" class="ladder"
@@ -164,7 +168,7 @@ label + input + label {
   margin-left: 20px;
 }
 
-label .dolphin {
+label .swimmer {
   font-size: 2rem;
   --fa-secondary-opacity: 1;
   --fa-primary-color: black;
