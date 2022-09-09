@@ -41,6 +41,7 @@ const actions: ActionTree<IStoreState, IStoreState> = {
           commit(MutationTypes.SET_LOGIN);
           commit(MutationTypes.SET_MEALS_FIREBASE);
           commit(MutationTypes.SET_SHOPPY_FIREBASE);
+          commit(MutationTypes.SET_GENERAL_FIREBASE);
         }
       });
     } catch (err) {

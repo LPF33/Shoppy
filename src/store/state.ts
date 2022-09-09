@@ -10,7 +10,9 @@ export default function state(): IStoreState {
     supermarktItems: null,
     drogerieItems: null,
     shoppyIndex: null,
+    sport: null,
     unsubscribeCooky: null,
     unsubscribeShoppy: null,
+    unsubscribeGeneral: null,
   };
 }

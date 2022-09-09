@@ -57,6 +57,12 @@ const routes = [
     meta: { guest: true },
     component: () => import("../views/Login.vue"),
   },
+  {
+    path: "/settings",
+    name: "Settings",
+    meta: { requiresAuth: true },
+    component: () => import("../views/Settings.vue"),
+  },
 ];
 
 const router = createRouter({

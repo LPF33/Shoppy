@@ -5,6 +5,7 @@ import {
   IMealList,
   IDrogerieItem,
   ISupermarktItem,
+  ISport,
 } from "@/Types/Store";
 import { authFirebase, shoppyFirestore } from "@/firebase/config";
 import { collection, onSnapshot } from "firebase/firestore";
@@ -18,6 +19,7 @@ export type Mutations<S = IStoreState> = {
   [MutationTypes.UNSUBSCRIBE_FIREBASE](state: S): void;
   [MutationTypes.SET_MEALS_FIREBASE](state: S): void;
   [MutationTypes.SET_SHOPPY_FIREBASE](state: S): void;
+  [MutationTypes.SET_GENERAL_FIREBASE](state: S): void;
 };
 
 const mutations: MutationTree<IStoreState> & Mutations = {
@@ -33,6 +35,7 @@ const mutations: MutationTree<IStoreState> & Mutations = {
     state.supermarktItems = null;
     state.drogerieItems = null;
     state.shoppyIndex = null;
+    state.sport = null;
     try {
       await signOut(authFirebase);
     } catch (err) {
@@ -51,6 +54,9 @@ const mutations: MutationTree<IStoreState> & Mutations = {
     if (typeof state.unsubscribeShoppy === "function") {
       state.unsubscribeShoppy();
     }
+    if (typeof state.unsubscribeGeneral === "function") {
+      state.unsubscribeGeneral();
+    }
   },
   [MutationTypes.SET_MEALS_FIREBASE](state) {
     try {
@@ -58,11 +64,14 @@ const mutations: MutationTree<IStoreState> & Mutations = {
         collection(shoppyFirestore, "cooky"),
         (doc) => {
           state.mealList = doc.docs.map((item) => item.data()) as IMealList[];
+        },
+        (err) => {
+          state.error = true;
+          state.errorMessage = err.message;
         }
       );
     } catch (err) {
       state.error = true;
-      state.errorMessage = err;
     }
   },
   [MutationTypes.SET_SHOPPY_FIREBASE](state) {
@@ -88,7 +97,24 @@ const mutations: MutationTree<IStoreState> & Mutations = {
       );
     } catch (err) {
       state.error = true;
-      state.errorMessage = err;
+    }
+  },
+  [MutationTypes.SET_GENERAL_FIREBASE](state) {
+    try {
+      state.unsubscribeGeneral = onSnapshot(
+        collection(shoppyFirestore, "general"),
+        (doc) => {
+          state.sport = doc.docs
+            .filter((item) => item.id === "sport")
+            .map((item) => item.data())[0] as ISport;
+        },
+        (err) => {
+          state.error = true;
+          state.errorMessage = err.message;
+        }
+      );
+    } catch (err) {
+      state.error = true;
     }
   },
 };

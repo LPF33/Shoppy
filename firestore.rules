@@ -14,5 +14,8 @@ service cloud.firestore {
     match /budget/{document=**} {
       allow read, write: if signedIn();
     }
+    match /general/{document=**} {
+      allow read, write: if signedIn();
+    }
   }
 }

@@ -25,6 +25,12 @@ export interface IDrogerieItem {
   last: boolean;
 }
 
+export interface ISport {
+  first: boolean;
+  second: boolean;
+  date: string;
+}
+
 export interface IStoreState {
   isAuthenticated: boolean;
   error: boolean;
@@ -34,8 +40,10 @@ export interface IStoreState {
   supermarktItems: null | ISupermarktItem[];
   drogerieItems: null | IDrogerieItem[];
   shoppyIndex: null | number;
+  sport: null | ISport;
   unsubscribeCooky: null | (() => void);
   unsubscribeShoppy: null | (() => void);
+  unsubscribeGeneral: null | (() => void);
 }
 
 export enum MutationTypes {
@@ -45,6 +53,7 @@ export enum MutationTypes {
   UNSUBSCRIBE_FIREBASE = "unsubscribeFirebase",
   SET_MEALS_FIREBASE = "setMealsFirebase",
   SET_SHOPPY_FIREBASE = "setShoppyFirebase",
+  SET_GENERAL_FIREBASE = "setGeneralFirebase",
 }
 
 export enum ActionTypes {

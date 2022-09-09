@@ -21,8 +21,12 @@ import {
   faCalendarCirclePlus,
   faCalendarXmark,
   faCircleXmark,
-  faChartMixed,
+  faSackDollar,
   faGear,
+  faUserChef,
+  faPersonSwimming,
+  faWaterLadder,
+  faDolphin,
 } from "@fortawesome/pro-duotone-svg-icons";
 
 /* add icons to the library */
@@ -41,8 +45,12 @@ library.add(
   faCalendarCirclePlus,
   faCalendarXmark,
   faCircleXmark,
-  faChartMixed,
-  faGear
+  faSackDollar,
+  faGear,
+  faUserChef,
+  faPersonSwimming,
+  faWaterLadder,
+  faDolphin
 );
 
 const app = createApp(App)
