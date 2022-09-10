@@ -110,7 +110,8 @@ export default defineComponent({
         }
         firstDone.value = newVal.first;
         secondDone.value = newVal.second;
-      }
+      },
+      { immediate: true }
     );
 
     return { firstDone, secondDone, status };
