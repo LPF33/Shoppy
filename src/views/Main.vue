@@ -5,20 +5,13 @@
         <img :src="`${publicPath}img/cuddly_bears.gif`" alt="cuddly bears" />
       </div>
       <div class="routes">
-        <router-link :to="{ name: 'Budget' }">
-          <span
-            ><font-awesome-icon
-              icon="fa-duotone fa-sack-dollar"
-              class="icon sack"
-          /></span>
-        </router-link>
         <router-link :to="{ name: 'Settings' }">
           <span
             ><font-awesome-icon icon="fa-duotone fa-gear" class="icon"
           /></span>
         </router-link>
       </div>
-      <div class="message"></div>
+      <ShowInfo class="info" />
       <CookyPreview class="cooky" />
       <CheckSport class="sport" />
     </div>
@@ -30,10 +23,11 @@
 import { defineComponent } from "vue";
 import CookyPreview from "@/components/CookyPreview.vue";
 import CheckSport from "@/components/CheckSport.vue";
+import ShowInfo from "@/components/ShowInfo.vue";
 
 export default defineComponent({
   name: "Main",
-  components: { CookyPreview, CheckSport },
+  components: { CookyPreview, CheckSport, ShowInfo },
   data() {
     return {
       publicPath: process.env.BASE_URL,
@@ -120,6 +114,10 @@ section {
   grid-area: cooky;
 }
 
+.grid .info {
+  grid-area: info;
+}
+
 .grid img {
   width: 100%;
   height: 100%;
@@ -142,11 +140,6 @@ section {
   --fa-secondary-opacity: 1;
   --fa-primary-color: black;
   --fa-secondary-color: rgb(209, 209, 209);
-}
-
-.grid .icon.sack {
-  --fa-primary-color: rgb(64, 64, 64);
-  --fa-secondary-color: rgb(255, 196, 0);
 }
 
 aside {

@@ -11,6 +11,7 @@ export default function state(): IStoreState {
     drogerieItems: null,
     shoppyIndex: null,
     sport: null,
+    info: "",
     unsubscribeCooky: null,
     unsubscribeShoppy: null,
     unsubscribeGeneral: null,

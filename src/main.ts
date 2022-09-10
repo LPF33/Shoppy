@@ -26,7 +26,7 @@ import {
   faUserChef,
   faPersonSwimming,
   faWaterLadder,
-  faDolphin,
+  faInfo,
 } from "@fortawesome/pro-duotone-svg-icons";
 
 /* add icons to the library */
@@ -50,7 +50,7 @@ library.add(
   faUserChef,
   faPersonSwimming,
   faWaterLadder,
-  faDolphin
+  faInfo
 );
 
 const app = createApp(App)

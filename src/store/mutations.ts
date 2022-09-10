@@ -104,9 +104,14 @@ const mutations: MutationTree<IStoreState> & Mutations = {
       state.unsubscribeGeneral = onSnapshot(
         collection(shoppyFirestore, "general"),
         (doc) => {
-          state.sport = doc.docs
+          const sport = doc.docs
             .filter((item) => item.id === "sport")
-            .map((item) => item.data())[0] as ISport;
+            .map((item) => item.data());
+          state.sport = sport.length ? (sport[0] as ISport) : null;
+          const info = doc.docs
+            .filter((item) => item.id === "info")
+            .map((item) => item.data());
+          state.info = info.length ? info[0].message : "";
         },
         (err) => {
           state.error = true;

@@ -41,6 +41,7 @@ export interface IStoreState {
   drogerieItems: null | IDrogerieItem[];
   shoppyIndex: null | number;
   sport: null | ISport;
+  info: string;
   unsubscribeCooky: null | (() => void);
   unsubscribeShoppy: null | (() => void);
   unsubscribeGeneral: null | (() => void);
