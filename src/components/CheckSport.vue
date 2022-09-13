@@ -15,7 +15,12 @@
       <label for="first" v-else
         ><font-awesome-icon icon="fa-duotone fa-water-ladder" class="ladder"
       /></label>
-      <input type="checkbox" id="first" v-model="firstDone" />
+      <input
+        type="checkbox"
+        id="first"
+        @input="onInput('first')"
+        :checked="firstDone"
+      />
       <label for="second" v-if="secondDone"
         ><font-awesome-icon
           icon="fa-duotone fa-person-swimming"
@@ -24,7 +29,12 @@
       <label for="second" v-else
         ><font-awesome-icon icon="fa-duotone fa-water-ladder" class="ladder"
       /></label>
-      <input type="checkbox" id="second" v-model="secondDone" />
+      <input
+        type="checkbox"
+        id="second"
+        @input="onInput('second')"
+        :checked="secondDone"
+      />
     </div>
   </div>
 </template>
@@ -79,17 +89,17 @@ export default defineComponent({
       }
     }
 
-    watch([firstDone, secondDone], ([first, second]) =>
+    function onInput(type: "first" | "second") {
       updateFirebase(
-        first,
-        second,
+        type === "first" ? !firstDone.value : firstDone.value,
+        type === "second" ? !secondDone.value : secondDone.value,
         dateFormat(
           new Date().getFullYear(),
           new Date().getMonth(),
           new Date().getDate()
         )
-      )
-    );
+      );
+    }
 
     watch(
       () => store.state.sport,
@@ -114,7 +124,7 @@ export default defineComponent({
       { immediate: true }
     );
 
-    return { firstDone, secondDone, status };
+    return { firstDone, secondDone, status, onInput };
   },
 });
 </script>

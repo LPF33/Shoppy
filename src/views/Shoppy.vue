@@ -140,7 +140,7 @@ export default {
     window.addEventListener("resize", this.scrollToTop.bind(this));
   },
   updated() {
-    this.$refs.list.scrollTop = this.$refs.list.scrollHeight;
+    this.scrollToTop();
   },
   beforeUnmount() {
     if (typeof this.unwatch === "function") {

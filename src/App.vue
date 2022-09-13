@@ -40,6 +40,7 @@ export default defineComponent({
   --dark-grey: #232323;
   --light-grey: rgba(184, 184, 184);
   --color-red: rgb(255, 92, 92);
+  --yellow: #ffeda3;
 }
 
 #app {
@@ -56,6 +57,7 @@ h3 {
 
 main {
   flex-grow: 1;
+  background-color: var(--dark-grey);
 }
 
 span.emoji {
