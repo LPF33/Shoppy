@@ -5,6 +5,7 @@ node_modules
 /src/firebase/config.js
 .firebase
 /public/img/
+shoppy-old.gif
 
 
 # local env files

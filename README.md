@@ -2,7 +2,7 @@
 
 This app was a long time wish of my wife.
 
-🛒 **Draggable Shopping** list with Firebase Realtime data synchronization.
+🛒 **Draggable Shopping List** with Firebase Realtime data synchronization.
 
 🍽 **Cooky calendar**, to save the meals, we will cook in the future.
 For the calendar I did not use a library, built it myself, quite a nice, interesting task.
