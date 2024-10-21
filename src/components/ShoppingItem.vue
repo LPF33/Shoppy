@@ -108,11 +108,9 @@ export default defineComponent({
 }
 
 .shopping-item > input[type="text"] {
-  display: flex;
-  flex-grow: 1;
+  width: calc(100% - 80px);
   cursor: pointer;
   white-space: nowrap;
-  overflow-x: auto;
   font-size: 1.2rem;
   padding-left: 10px;
   background-color: inherit;
